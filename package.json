@@ -1,0 +1,19 @@
+{
+  "name": "electron-quick-start",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "http://git.bilibili.co/xiazhongyang/electronic-uptool",
+  "keywords": [
+    "Electron",
+    "demo"
+  ],
+  "author": "Xia Zhongyang",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "electron": "^2.0.0"
+  }
+}
