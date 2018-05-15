@@ -14,7 +14,7 @@ cat ./js/hmac_sha1.js\
     ./js/bce-bos-uploader-lite.js\
     ./js/raven.min.js\
     ./js/jquery.ajax-retry.js\
-    ./webuploader/dist/webuploader.html5only.js\
+    ./js/webuploader.html5only.js\
     ./js/ybuploader.js\
     |grep -v "input\.attr( 'capture', 'camera');" \
     > ./js/ybuploader.full.js

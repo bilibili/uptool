@@ -12,7 +12,7 @@
 
       if (window.require) {
           require = window.require;
-          require = undefined;
+          // require = undefined;
       }
   </script>
   <script src="./js/vue.js"></script>
@@ -37,7 +37,7 @@
   <script>
     const submit_page = {
       template: `
-        <div>
+        <div v-once>
           <div class="box">
               <nav class="level">
                   <div class="level-left">
@@ -163,8 +163,8 @@
           </div>
         </div>
       `,
-      mounted: function() {
-        // renderSubmit();
+      created: function() {
+        renderSubmit();
       }
       
     };
@@ -187,6 +187,9 @@
 
     const app = new Vue({
       el: '#app',
+      data: {
+          submit_rendered: false
+      },
       router
     });
   </script>
