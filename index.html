@@ -2,42 +2,44 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <title>Electronic-uptool</title>
-  <script>
-      if (window.module) {
-          module = window.module;
-          module = undefined;
-      }
+    <meta charset="UTF-8">
+    <title>Electronic-uptool</title>
+    <script>
+        if (window.module) {
+            module = window.module;
+            module = undefined;
+        }
 
-      if (window.require) {
-          require = window.require;
-          // require = undefined;
-      }
-  </script>
-  <script src="./js/vue.js"></script>
-  <script src="./js/vue-router.js"></script>
-  <script src="./js/jquery.min.js"></script>
-  <script src="./js/ybuploader.full.js"></script>
-  <script src="./js/submit.js"></script>
-  <link href="https://cdn.bootcss.com/bulma/0.6.1/css/bulma.min.css" rel="stylesheet">
-  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+        if (window.require) {
+            require = window.require;
+            // require = undefined;
+        }
+    </script>
+    <script src="./js/vue.js"></script>
+    <script src="./js/vue-router.js"></script>
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/ybuploader.full.js"></script>
+    <script src="./js/submit.js"></script>
+    <link href="https://cdn.bootcss.com/bulma/0.6.1/css/bulma.min.css" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 
 </head>
 
 <body>
-  <div id="app">
-    <p>
-      <router-link to="/submit">Submit</router-link>
-      <router-link to="/crop">Crop</router-link>
-    </p>
-    <router-view></router-view>
-  </div>
+    <div id="app">
+        <p>
+            <router-link to="/submit">Submit</router-link>
+            <router-link to="/crop">Crop</router-link>
+        </p>
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
+    </div>
 
-  <script>
-    const submit_page = {
-      template: `
-        <div v-once>
+    <script>
+        const submit_page = {
+            template: `
+        <div>
           <div class="box">
               <nav class="level">
                   <div class="level-left">
@@ -163,36 +165,42 @@
           </div>
         </div>
       `,
-      created: function() {
-        renderSubmit();
-      }
-      
-    };
+            //   data() {
+            //       return {isRendered: false}
+            //   },
+            created: function () {
+                //   if (!isRendered) {
+                renderSubmit();
+                // isRendered=true;
+                //   }
+            }
 
-    const crop_page = {
-      template: `
+        };
+
+        const crop_page = {
+            template: `
           <div>
             hohoho
           </div>
         `
-    };
-    const routes = [
-      { path: '/submit', component: submit_page, },
-      { path: '/crop', component: crop_page }
-    ];
+        };
+        const routes = [
+            { path: '/submit', component: submit_page, },
+            { path: '/crop', component: crop_page }
+        ];
 
-    const router = new VueRouter({
-      routes
-    });
+        const router = new VueRouter({
+            routes
+        });
 
-    const app = new Vue({
-      el: '#app',
-      data: {
-          submit_rendered: false
-      },
-      router
-    });
-  </script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                submit_rendered: false
+            },
+            router
+        });
+    </script>
 </body>
 
 </html>
