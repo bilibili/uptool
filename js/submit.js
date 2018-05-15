@@ -1,4 +1,4 @@
-function renderSubmit() {
+function renderSubmit(self) {
     if (window.module) {
         module = window.module;
     }
@@ -269,25 +269,11 @@ function renderSubmit() {
 
             ybup.bind('UploadProgress', function (up, file) {
                 var speed = ybup.formatSize(up.total.bytesPerSec) + '/s - ' + os;
-                $('#' + file.id + '>.state').html(file.percent + '% ' + speed);
-                $('#' + file.id + '>.progress').val(file.percent);
+                console.log(self.videos);
             });
             ybup.bind('FileFiltered', function (up, file) {
-                $('#filelist').append(
-                    '<div id="' + file.id + '">' +
-                    '<a onclick=cancel("' + file.id + '") href="javascript:void(0);" class=cancel>取消</a>' + ' ' +
-                    file.name + ' </br> ' +
-                    ybup.formatSize(file.size) +
-                    ' <b class=state></b> ' +
-                    ' <progress value=0 max=100 class="progress"></progess> ' +
-                    '<span class=bili_filename></span> ' +
-                    '</div>'
-                );
-                if (!$('#title').val()) {
-                    $('#title').val(file.name.substring(0, file.name.lastIndexOf('.')));
-                }
-
-                videoqueue.push(file.bili_filename);
+                file.percent=0
+                self.videos.push(file)
             });
 
             ybup.bind('FileUploaded', function (up, file, info) {

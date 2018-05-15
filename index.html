@@ -39,72 +39,74 @@
     <script>
         const submit_page = {
             template: `
-        <div>
-          <div class="box">
-              <nav class="level">
-                  <div class="level-left">
-                      <span id="selectfiles" class="webuploader-container">新建投稿</span>
-                      &nbsp;
-                      <button id="start" class="button is-light"> 全部开始 </button>
-                      &nbsp;
-                      <button id="stop" class="button is-light"> 全部停止 </button>
-                  </div>
-                  <div class="level-right">
-                      <input type="submit" form="form" class="button is-dark">
-                  </div>
-              </nav>
-          </div>
+                <div>
+                <div class="box">
+                    <nav class="level">
+                        <div class="level-left">
+                            <span id="selectfiles" class="webuploader-container">新建投稿</span>
+                            &nbsp;
+                            <button id="start" class="button is-light"> 全部开始 </button>
+                            &nbsp;
+                            <button id="stop" class="button is-light"> 全部停止 </button>
+                        </div>
+                        <div class="level-right">
+                            <input type="submit" form="form" class="button is-dark">
+                        </div>
+                    </nav>
+                </div>
 
-          <div class="box" style="height:500px; overflow-y:scroll;">
+                <div class="box" style="height:500px; overflow-y:scroll;">
 
-              <div id="filelist"></div>
-              <br>
+                    <div id="filelist" v-for="video in videos">
+                        {{video.name}} {{video.percent}}
+                    </div>
+                    <br>
 
-              <form id="form">
+                    <form id="form">
 
-                  <div class="field">
-                      <label class="label">稿件标题</label>
-                      <div class="control">
-                          <input name="title" class="input" type="text" placeholder="Text input">
-                      </div>
-                  </div>
+                        <div class="field">
+                            <label class="label">稿件标题</label>
+                            <div class="control">
+                                <input name="title" class="input" type="text" placeholder="Text input">
+                            </div>
+                        </div>
 
-                  <div class="field">
-                      <label class="label">标签(逗号分隔)</label>
-                      <div class="control">
-                          <input name="tag" class="input" type="text" placeholder="如：动作,MAD">
-                      </div>
-                  </div>
+                        <div class="field">
+                            <label class="label">标签(逗号分隔)</label>
+                            <div class="control">
+                                <input name="tag" class="input" type="text" placeholder="如：动作,MAD">
+                            </div>
+                        </div>
 
-                  <div class="field">
-                      <label class="label">视频简介</label>
-                      <div class="control">
-                          <textarea class="textarea" name="desc" type="text" placeholder="请输入简介"></textarea>
-                      </div>
-                  </div>
+                        <div class="field">
+                            <label class="label">视频简介</label>
+                            <div class="control">
+                                <textarea class="textarea" name="desc" type="text" placeholder="请输入简介"></textarea>
+                            </div>
+                        </div>
 
-                  <label class="label">类型</label>
-                  <div class="field">
-                      <div class="control">
-                          <label class="radio">
-                              <input name="copyright" value="1" type="radio"> 自制
-                          </label>
-                          <label class="radio">
-                              <input name="copyright" value="2" type="radio"> 转载
-                          </label>
-                      </div>
-                      <select name="tid">
-                          <option v-for="category in categories" :value="category.id">{{category.name}}</option>
-                      </select>
-                  </div>
+                        <label class="label">类型</label>
+                        <div class="field">
+                            <div class="control">
+                                <label class="radio">
+                                    <input name="copyright" value="1" type="radio"> 自制
+                                </label>
+                                <label class="radio">
+                                    <input name="copyright" value="2" type="radio"> 转载
+                                </label>
+                            </div>
+                            <select name="tid">
+                                <option v-for="category in categories" :value="category.id">{{category.name}}</option>
+                            </select>
+                        </div>
 
-              </form>
-          </div>
-        </div>
-      `,
+                    </form>
+                </div>
+                </div>
+            `,
             data() {
                 return {
-                    videos: {},
+                    videos: [],
                     categories: [
                         { id: "24", name: "动画-MAD·AMV" },
                         { id: "25", name: "动画-MMD·3D" },
@@ -174,7 +176,7 @@
                 }
             },
             created: function () {
-                renderSubmit();
+                renderSubmit(this);
             }
 
         };
