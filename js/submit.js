@@ -1,3 +1,21 @@
+var ybup = null;
+
+function cancel(fileid, videos) {
+    console.log(videos)
+    if (confirm('确认取消上传？')) {
+        var file = ybup.getFile(fileid);
+        ybup.removeFile(file);
+        $('#' + fileid).remove();
+        file.destroy();
+        file.uploaded = false;
+
+        index = videos.indexOf(file);
+        if (index>=0) {
+            videos.splice(index, 1);
+        }
+    }
+}
+
 function renderSubmit(self) {
     if (window.module) {
         module = window.module;
@@ -7,8 +25,6 @@ function renderSubmit(self) {
         require = window.require;
     }
 
-    videoqueue = [];
-
     // // Query all cookies.
     // const { session } = require('electron').remote;
 
@@ -17,16 +33,7 @@ function renderSubmit(self) {
     //     console.log(error, cookies);
     //     csrf = cookies[0]['value'];
     // })
-    const { ipcRenderer } = require('electron');
-    function dev_tool() {
-        ipcRenderer.send('dev_tool', 'dev_tool');
-    }
-    function win_minimize() {
-        ipcRenderer.send('win_minimize', 'win_minimize');
-    }
-    function win_hide() {
-        ipcRenderer.send('win_hide', 'win_hide');
-    }
+
     if (typeof module === 'object') {
         window.module = module;
         module = undefined;
@@ -180,19 +187,6 @@ function renderSubmit(self) {
 
         return false;
     });
-    var ybup = null;
-
-    function cancel(fileid) {
-        if (confirm('确认取消上传？')) {
-            var file = ybup.getFile(fileid);
-            ybup.removeFile(file);
-            $('#' + fileid).remove();
-            file.destroy();
-            file.uploaded = false;
-            videoqueue = videoqueue.filter(e => e !== file.bili_filename);
-
-        }
-    }
 
     // $(window).load(function () {
 
@@ -273,16 +267,18 @@ function renderSubmit(self) {
             });
             ybup.bind('FileFiltered', function (up, file) {
                 file.percent=0
+                file.status=""
                 self.videos.push(file)
             });
 
             ybup.bind('FileUploaded', function (up, file, info) {
                 file.uploaded = true;
-                $('#' + file.id + '>.state').html('上传成功');
-                if ($('#auto_submit').is(':checked')) {
-                    $("form").submit();
-                }
-                ipcRenderer.send('upload_complete', file.name);
+                file.status="complete"
+                // $('#' + file.id + '>.state').html('上传成功');
+                // if ($('#auto_submit').is(':checked')) {
+                //     $("form").submit();
+                // }
+                new Notification("上传成功", {body: file.name});
             });
 
             ybup.bind('Error', function (up, err) {

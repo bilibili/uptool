@@ -56,9 +56,13 @@
                 </div>
 
                 <div class="box" style="height:500px; overflow-y:scroll;">
-
                     <div id="filelist" v-for="video in videos">
-                        {{video.name}} {{video.percent}}
+                        <a v-on:click="cancel(video.id, videos)">取消</a>
+                        {{video.name}}
+                        <span v-show="video.status=='progress'">正在上传</span>
+                        <span v-show="video.status=='error'">错误</span>
+                        <span v-show="video.status=='complete'">完成</span>
+                        <progress class="progress" max="100" :value=video.percent></progress>
                     </div>
                     <br>
 
@@ -172,7 +176,8 @@
                         { id: "162", name: "生活-绘画" },
                         { id: "163", name: "生活-运动" },
                         { id: "166", name: "广告-广告" }
-                    ]
+                    ],
+                    cancel
                 }
             },
             created: function () {
