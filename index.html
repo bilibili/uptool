@@ -309,15 +309,6 @@
                     require = undefined;
                 }
 
-                function addurl() {
-                    //var pull_url = prompt('请输入Url', 'https://bvcstatic.acgvideo.com/tjx-2900k.mp4');
-                    var pull_url = prompt('请输入Url', 'http://api.live.bilibili.com/live_stream/v1/record/playurl?rid=118988');
-                    if (!pull_url) {
-                        return;
-                    }
-                    this.ybup.addUrl(pull_url);
-                }
-
                 function getParam(key) {
                     var vars = {};
                     var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
