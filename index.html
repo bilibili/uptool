@@ -50,7 +50,7 @@
                             <button id="stop" class="button is-light"> 全部停止 </button>
                         </div>
                         <div class="level-right">
-                            <input type="submit" form="form" class="button is-dark">
+                            <button v-on:click="submit" class="button is-dark">提交</button>
                         </div>
                     </nav>
                 </div>
@@ -110,6 +110,7 @@
             `,
             data() {
                 return {
+                    ybup: null,
                     videos: [],
                     categories: [
                         { id: "24", name: "动画-MAD·AMV" },
@@ -190,25 +191,6 @@
                     })
                 },
                 submit: function () {
-                    // var videos = [];
-                    // var file = null;
-                    // var i = null;
-                    // for (i in ybup.files) {
-                    //     file = ybup.files[i];
-                    //     if (videos.includes(file)) {
-                    //         if (file.uploaded) {
-                    //             videos.push({
-                    //                 desc: "",
-                    //                 filename: file.bili_filename,
-                    //                 title: file.name.substring(0, file.name.lastIndexOf('.')),
-                    //             });
-                    //         } else {
-                    //             var notif = new Notification('有正在进行的上传，请等待完成或取消');
-                    //             return false;
-                    //         }
-                    //     }
-                    // }
-                    // console.log(videos);
                     videos = [];
                     for (i = 0; i < this.videos.length; i++) {
                         file = this.videos[i]
@@ -296,7 +278,128 @@
                 }
             },
             created: function () {
-                renderSubmit(this);
+                videos = this.videos
+                if (window.module) {
+                    module = window.module;
+                }
+
+                if (window.require) {
+                    require = window.require;
+                }
+
+                if (typeof module === 'object') {
+                    window.module = module;
+                    module = undefined;
+                }
+                if (typeof require === 'object') {
+                    window.require = require;
+                    require = undefined;
+                }
+
+                function addurl() {
+                    //var pull_url = prompt('请输入Url', 'https://bvcstatic.acgvideo.com/tjx-2900k.mp4');
+                    var pull_url = prompt('请输入Url', 'http://api.live.bilibili.com/live_stream/v1/record/playurl?rid=118988');
+                    if (!pull_url) {
+                        return;
+                    }
+                    this.ybup.addUrl(pull_url);
+                }
+
+                function getParam(key) {
+                    var vars = {};
+                    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+                        function (m, key, value) {
+                            vars[key] = value;
+                        });
+                    return vars[key];
+                }
+                var os = getParam('os');
+
+                $('#os').html(os);
+
+                $('#stop').click(function () {
+                    this.ybup.stop();
+                });
+                $('#destroy').click(function () {
+                    this.ybup.destroy();
+                });
+                $('#start').click(function () {
+                    this.ybup.start();
+                });
+                $('#retry').click(function () {
+                    this.ybup.retry();
+                });
+                $('#upload').click(function () {
+                    this.ybup.upload();
+                });
+
+                window.rec_rp = window.rec_rp || function () { (rec_rp.q = rec_rp.q || []).push(arguments) };
+                rec_rp("pageview");
+                ybuploader.get_upcdns(function (upcdns) {
+
+                    console.log(upcdns);
+                    var upcdn = upcdns[0] || {};
+
+                    //
+                    // 更多参数详见
+                    // WebUploader API文档 - Web Uploader
+                    // http://fex.baidu.com/webuploader/doc/index.html#WebUploader_Uploader_options
+                    //
+                    this.ybup = new ybuploader.Ybuploader(upcdn.os, {
+                        dnd: '#selectfiles',
+                        auto: false,
+                        pick: {
+                            id: '#selectfiles',
+                            multiple: true
+                        },
+                        accept: {
+                            mimeTypes: '.txt,.mp3,.mp4,.flv,.avi,.wmv,.mov,.webm,.mpeg4,.ts,.mpg,.rm,.rmvb,.mkv',
+                            title: 'default',
+                        },
+                        chunkRetry: 10,
+                        chunkRetryDelay: 5000,
+                        duplicate: false,
+                        fileSingleSizeLimit: 4 * 1024 * 1024 * 1024, // '4GB'
+                        // browse_button: ['selectfiles'],
+                        // multi_selection: true,
+                        // runtimes: 'html5',
+                        // rename: true,
+                        // drop_element: '#selectfiles'
+                    }, 'ugcupos/yb', null, upcdn.query);
+
+                    this.ybup.bind('UploadProgress', function (up, file) {
+                        var speed = ybup.formatSize(up.total.bytesPerSec) + '/s - ' + os;
+                    });
+
+                    this.ybup.bind('FileFiltered', function (up, file) {
+                        file.percent = 0
+                        file.status = ""
+                        videos.push(file)
+                    });
+
+                    this.ybup.bind('FileUploaded', function (up, file, info) {
+                        file.uploaded = true;
+                        file.status = "complete"
+                        // $('#' + file.id + '>.state').html('上传成功');
+                        // if ($('#auto_submit').is(':checked')) {
+                        //     $("form").submit();
+                        // }
+                        new Notification("上传成功", { body: file.name });
+                    });
+
+                    this.ybup.bind('Error', function (up, err) {
+                        var notif = new Notification(err.showText);
+                    });
+
+                    this.ybup.bind('BeforeUpload', function (up, file) {
+                        console.log('BeforeUpload');
+                        console.log('bili_filename: ' + file.bili_filename);
+                        console.log($('#' + file.id));
+                        console.log($('#' + file.id + '>.bili_filename'));
+                        $('#' + file.id + '>.bili_filename').html(file.bili_filename);
+                    });
+                    this.ybup.init();
+                })
             }
 
         };
