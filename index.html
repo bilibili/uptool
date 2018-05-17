@@ -177,8 +177,7 @@
                         { id: "162", name: "生活-绘画" },
                         { id: "163", name: "生活-运动" },
                         { id: "166", name: "广告-广告" }
-                    ],
-                    cancel
+                    ]
                 }
             },
             methods: {
@@ -275,6 +274,21 @@
                     });
 
                     return false;
+                },
+                cancel: function (fileid, videos) {
+                    console.log(videos)
+                    if (confirm('确认取消上传？')) {
+                        var file = ybup.getFile(fileid);
+                        ybup.removeFile(file);
+                        $('#' + fileid).remove();
+                        file.destroy();
+                        file.uploaded = false;
+
+                        index = videos.indexOf(file);
+                        if (index >= 0) {
+                            videos.splice(index, 1);
+                        }
+                    }
                 }
             },
             created: function () {
