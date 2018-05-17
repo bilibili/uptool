@@ -396,10 +396,31 @@
 
         const crop_page = {
             template: `
-          <div>
-            hohoho
-          </div>
-        `
+                <div>
+                    <input v-on:change="load" type='file'>
+                    <img :src="image_base64">
+                </div>
+            `,
+            data() {
+                return {
+                    image_base64: ''
+                }
+            },
+            methods: {
+                load: function(ev) {
+                    const files = ev.target.files
+
+                    if (files && files[0]) {
+                        const reader = new FileReader();
+
+                        reader.onload = e => {
+                            this.image_base64 = e.target.result;
+                        }
+                        reader.readAsDataURL(files[0]);
+                    }
+
+                }
+            }
         };
         const routes = [
             { path: '/submit', component: submit_page, },
