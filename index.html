@@ -44,9 +44,8 @@
                         <div class="level-left">
                             <span id="selectfiles" class="webuploader-container">新建投稿</span>
                             &nbsp;
-                            <button id="start" class="button is-light"> 全部开始 </button>
-                            &nbsp;
-                            <button id="stop" class="button is-light"> 全部停止 </button>
+                            <button id="start" v-show='is_paused && is_uploading' v-on:click="ybup.start(); is_paused=false" class="button is-light"> 继续上传 </button>
+                            <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
                         </div>
                         <div class="level-right">
                             <button v-on:click="submit" class="button is-dark">提交</button>
@@ -109,7 +108,7 @@
             `,
             data() {
                 return {
-                    ybup: null,
+                    ybup: {},
                     videos: [],
                     categories: [
                         { id: "24", name: "动画-MAD·AMV" },
@@ -176,7 +175,9 @@
                         { id: "162", name: "生活-绘画" },
                         { id: "163", name: "生活-运动" },
                         { id: "166", name: "广告-广告" }
-                    ]
+                    ],
+                    is_paused: false,
+                    is_uploading: false
                 }
             },
             methods: {
@@ -291,7 +292,6 @@
                 }
             },
             created: function () {
-                videos = this.videos
                 if (window.module) {
                     module = window.module;
                 }
@@ -321,25 +321,9 @@
 
                 $('#os').html(os);
 
-                $('#stop').click(function () {
-                    this.ybup.stop();
-                });
-                $('#destroy').click(function () {
-                    this.ybup.destroy();
-                });
-                $('#start').click(function () {
-                    this.ybup.start();
-                });
-                $('#retry').click(function () {
-                    this.ybup.retry();
-                });
-                $('#upload').click(function () {
-                    this.ybup.upload();
-                });
-
                 window.rec_rp = window.rec_rp || function () { (rec_rp.q = rec_rp.q || []).push(arguments) };
                 rec_rp("pageview");
-                ybuploader.get_upcdns(function (upcdns) {
+                ybuploader.get_upcdns(upcdns => {
 
                     console.log(upcdns);
                     var upcdn = upcdns[0] || {};
@@ -371,17 +355,18 @@
                         // drop_element: '#selectfiles'
                     }, 'ugcupos/yb', null, upcdn.query);
 
-                    this.ybup.bind('UploadProgress', function (up, file) {
-                        var speed = ybup.formatSize(up.total.bytesPerSec) + '/s - ' + os;
+                    this.ybup.bind('UploadProgress', (up, file) => {
+                        var speed = this.ybup.formatSize(up.total.bytesPerSec) + '/s - ' + os;
+                        this.is_uploading=true;
                     });
 
-                    this.ybup.bind('FileFiltered', function (up, file) {
+                    this.ybup.bind('FileFiltered', (up, file) => {
                         file.percent = 0
                         file.status = ""
-                        videos.push(file)
+                        this.videos.push(file)
                     });
 
-                    this.ybup.bind('FileUploaded', function (up, file, info) {
+                    this.ybup.bind('FileUploaded', (up, file, info) => {
                         file.uploaded = true;
                         file.status = "complete"
                         // $('#' + file.id + '>.state').html('上传成功');
@@ -389,6 +374,7 @@
                         //     $("form").submit();
                         // }
                         new Notification("上传成功", { body: file.name });
+                        this.is_uploading=false;
                     });
 
                     this.ybup.bind('Error', function (up, err) {
