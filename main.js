@@ -11,9 +11,9 @@ const url = require('url')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({ width: 800, height: 600 })
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -21,6 +21,19 @@ function createWindow () {
     protocol: 'file:',
     slashes: true
   }))
+
+  const cookies = [
+        // your cookie goes here (testing only)
+  ]
+
+  const { session } = require('electron')
+  const ses = mainWindow.webContents.session
+  console.log(ses.getUserAgent());
+  for (i = 0; i < cookies.length; i++) {
+    ses.cookies.set(cookies[i], (error) => {
+      if (error) console.error(error)
+    })
+  }
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

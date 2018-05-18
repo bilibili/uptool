@@ -192,8 +192,8 @@
                     session.defaultSession.cookies.get({ name: 'bili_jct' }, (error, cookies) => {
                         console.log(error, cookies);
                         csrf = cookies[0]['value'];
-                        return csrf;
                     })
+                    return csrf;
                 },
                 submit: function () {
                     videos = [];
@@ -262,28 +262,11 @@
                         return false;
                     }
 
-                    $.ajax({
-                        type: 'POST',
-                        url: 'http://member.bilibili.com/x/vu/web/add?csrf=' + this.get_csrf(),
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify(req),
-                        dataType: 'json',
-                        success: function (result) {
-                            console.log(result);
-                            if (result.code == 0) {
-                                // if (confirm('成功！前往稿件管理？(需等待大概1分钟才会有)')) {
-                                //     openNewTab("http://member.bilibili.com/v/#!/article");
-                                // }
-                                // setTimeout(function () { window.location = window.location }, 500);
-                                var notif = new Notification("上传成功！");
-
-                            } else {
-                                var notif = new Notification(result.message);
-                            }
-                        }
-                    });
-
-                    return false;
+                    if (this.image_base64) {
+                        return this.submit_cover_and_video(req)
+                    } else {
+                        return this.submit_video(req)
+                    }
                 },
                 cancel: function (fileid, videos) {
                     console.log(videos)
@@ -299,6 +282,54 @@
                             videos.splice(index, 1);
                         }
                     }
+                },
+                submit_cover_and_video: function (req) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'https://member.bilibili.com/x/vu/web/cover/up',
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: {
+                            cover: this.image_base64,
+                            csrf: this.get_csrf()
+                        },
+                        dataType: 'json',
+                        success: (result) => {
+                            console.log(result)
+                            if (result.code == 0) {
+                                // perform ajax submit
+                                cover_url = result["data"]["url"]
+                                req["cover"] = cover_url
+                                return this.submit_video(req)
+                            } else {
+                                var notif = new Notification(result.message);
+                                return false;
+                            }
+                        }
+                    })
+                },
+                submit_video: function (req) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'http://member.bilibili.com/x/vu/web/add?csrf=' + this.get_csrf(),
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(req),
+                        dataType: 'json',
+                        success: function (result) {
+                            console.log(result);
+                            if (result.code == 0) {
+                                // if (confirm('成功！前往稿件管理？(需等待大概1分钟才会有)')) {
+                                //     openNewTab("http://member.bilibili.com/v/#!/article");
+                                // }
+                                // setTimeout(function () { window.location = window.location }, 500);
+                                var notif = new Notification("上传成功！");
+                                return true;
+
+                            } else {
+                                var notif = new Notification(result.message);
+                                return false;
+                            }
+                        }
+                    });
                 }
             },
             created: function () {
@@ -367,7 +398,7 @@
 
                     this.ybup.bind('UploadProgress', (up, file) => {
                         var speed = this.ybup.formatSize(up.total.bytesPerSec) + '/s - ' + os;
-                        this.is_uploading=true;
+                        this.is_uploading = true;
                     });
 
                     this.ybup.bind('FileFiltered', (up, file) => {
@@ -384,7 +415,7 @@
                         //     $("form").submit();
                         // }
                         new Notification("上传成功", { body: file.name });
-                        this.is_uploading=false;
+                        this.is_uploading = false;
                     });
 
                     this.ybup.bind('Error', function (up, err) {
@@ -434,7 +465,7 @@
                 </div>
             `,
             methods: {
-                load: function(ev) {
+                load: function (ev) {
                     const files = ev.target.files
 
                     if (files && files[0]) {
@@ -442,16 +473,17 @@
 
                         reader.onload = e => {
                             this.image_base64 = e.target.result;
+                            console.log(this.image_base64)
                         }
                         reader.readAsDataURL(files[0]);
                     }
 
                 },
-                save: function() {
+                save: function () {
                     this.$emit('set-cover', this.image_base64)
                     this.$emit('close-modal')
                 },
-                reset: function() {
+                reset: function () {
                     this.image_base64 = ''
                     this.$emit('set-cover', this.image_base64)
                 }
