@@ -22,6 +22,10 @@
     <link href="https://cdn.bootcss.com/bulma/0.6.1/css/bulma.min.css" rel="stylesheet">
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.3.5/cropper.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.3.5/cropper.css" rel="stylesheet">
+
+
 </head>
 
 <body>
@@ -55,7 +59,7 @@
                     </nav>
                 </div>
 
-                <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false"></crop-modal>
+                <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data"></crop-modal>
 
                 <div class="box" style="height:500px; overflow-y:scroll;">
                     <div id="filelist" v-for="video in videos">
@@ -183,7 +187,9 @@
                     is_paused: false,
                     is_uploading: false,
                     showModal: false,
-                    image_base64: ""
+                    image_base64: "",
+                    cropped_cover: "",
+                    cropper_data: null
                 }
             },
             methods: {
@@ -258,11 +264,11 @@
                         return false;
                     }
 
-                    if (!this.image_base64 && !confirm("没有设置封面，是否继续？")) {
+                    if (!this.cropped_cover && !confirm("没有设置封面，是否继续？")) {
                         return false;
                     }
 
-                    if (this.image_base64) {
+                    if (this.cropped_cover) {
                         return this.submit_cover_and_video(req)
                     } else {
                         return this.submit_video(req)
@@ -289,7 +295,7 @@
                         url: 'https://member.bilibili.com/x/vu/web/cover/up',
                         contentType: 'application/x-www-form-urlencoded',
                         data: {
-                            cover: this.image_base64,
+                            cover: this.cropped_cover,
                             csrf: this.get_csrf()
                         },
                         dataType: 'json',
@@ -445,17 +451,17 @@
 
         const crop_modal = {
             template: `
-                <div class="modal is-active">
+                <div class="modal is-active" style="text-align:center;">
                     <div class="modal-background"></div>
-                    <div class="modal-card">
+                    <div class="modal-card" style="display: inline-block; width: auto;">
                         <header class="modal-card-head">
                             <p class="modal-card-title">设置封面</p>
                             <button v-on:click="$emit('close-modal')" class="delete" aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
-                        <!-- Content ... -->
-                        <input v-on:change="load" type='file'>
-                        <img :src="image_base64">
+                            <!-- Content ... -->
+                            <input id="cover-input" v-on:change="load" type='file'>
+                            <img id="cropper" :src="image_base64" style="max-width: 100%; max-height: calc(100vh - 300px);">
                         </section>
                         <footer class="modal-card-foot">
                             <button v-on:click="save" class="button is-success">保存</button>
@@ -473,27 +479,61 @@
 
                         reader.onload = e => {
                             this.image_base64 = e.target.result;
-                            console.log(this.image_base64)
+                            var image = document.getElementById("cropper")
                         }
                         reader.readAsDataURL(files[0]);
+
+                        reader.onloadend = () => {
+                            if (this.cropper) {
+                                this.cropper.destroy()
+                            }
+                            this.initialize_cropper()
+                        }
                     }
 
                 },
                 save: function () {
                     this.$emit('set-cover', this.image_base64)
                     this.$emit('close-modal')
+                    if (this.cropper.getCroppedCanvas()) {
+                        this.$emit('cropped-cover', this.cropper.getCroppedCanvas().toDataURL())
+                        this.$emit('cropper-data', this.cropper.getData())
+                    } else {
+                        this.$emit('cropped-cover', '')
+                        this.$emit('cropper-data', null)
+                    }
                 },
                 reset: function () {
                     this.image_base64 = ''
+                    this.cropper.destroy()
+                    document.getElementById('cover-input').value = ''
                     this.$emit('set-cover', this.image_base64)
+                },
+                initialize_cropper: function () {
+                    var image = document.getElementById("cropper")
+                    this.cropper = new Cropper(image, {
+                        viewMode: 0,
+                        aspectRatio: 16 / 10
+                    })
                 }
             },
-            props: ['src'],
+            props: ['src', 'cropper_data'],
             data() {
                 return {
-                    image_base64: this.src
+                    image_base64: this.src,
+                    image_cropped_base64: this.src,
+                    cropper: null
                 }
+            },
+            mounted: function () {
+                var image = document.getElementById("cropper")
+                this.cropper = new Cropper(image, {
+                    viewMode: 0,
+                    aspectRatio: 16 / 10,
+                    data: this.cropper_data
+                })
             }
+
         }
 
         const routes = [
