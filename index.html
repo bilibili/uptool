@@ -48,10 +48,13 @@
                             <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
                         </div>
                         <div class="level-right">
+                            <button v-on:click="showModal=true">cover</button>
                             <button v-on:click="submit" class="button is-dark">提交</button>
                         </div>
                     </nav>
                 </div>
+
+                <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false"></crop-modal>
 
                 <div class="box" style="height:500px; overflow-y:scroll;">
                     <div id="filelist" v-for="video in videos">
@@ -177,7 +180,9 @@
                         { id: "166", name: "广告-广告" }
                     ],
                     is_paused: false,
-                    is_uploading: false
+                    is_uploading: false,
+                    showModal: false,
+                    image_base64: ""
                 }
             },
             methods: {
@@ -397,15 +402,32 @@
         const crop_page = {
             template: `
                 <div>
-                    <input v-on:change="load" type='file'>
-                    <img :src="image_base64">
+                    hohoho
+                </div>
+            `
+        };
+
+        const crop_modal = {
+            template: `
+                <div class="modal is-active">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <p class="modal-card-title">设置封面</p>
+                            <button v-on:click="$emit('close-modal')" class="delete" aria-label="close"></button>
+                        </header>
+                        <section class="modal-card-body">
+                        <!-- Content ... -->
+                        <input v-on:change="load" type='file'>
+                        <img :src="image_base64">
+                        </section>
+                        <footer class="modal-card-foot">
+                            <button v-on:click="save" class="button is-success">保存</button>
+                            <button v-on:click="reset" class="button">重置</button>
+                        </footer>
+                    </div>
                 </div>
             `,
-            data() {
-                return {
-                    image_base64: ''
-                }
-            },
             methods: {
                 load: function(ev) {
                     const files = ev.target.files
@@ -419,9 +441,24 @@
                         reader.readAsDataURL(files[0]);
                     }
 
+                },
+                save: function() {
+                    this.$emit('set-cover', this.image_base64)
+                    this.$emit('close-modal')
+                },
+                reset: function() {
+                    this.image_base64 = ''
+                    this.$emit('set-cover', this.image_base64)
+                }
+            },
+            props: ['src'],
+            data() {
+                return {
+                    image_base64: this.src
                 }
             }
-        };
+        }
+
         const routes = [
             { path: '/submit', component: submit_page, },
             { path: '/crop', component: crop_page }
@@ -430,6 +467,8 @@
         const router = new VueRouter({
             routes
         });
+
+        Vue.component('crop-modal', crop_modal);
 
         const app = new Vue({
             el: '#app',
