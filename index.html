@@ -258,6 +258,10 @@
                         return false;
                     }
 
+                    if (!this.image_base64 && !confirm("没有设置封面，是否继续？")) {
+                        return false;
+                    }
+
                     $.ajax({
                         type: 'POST',
                         url: 'http://member.bilibili.com/x/vu/web/add?csrf=' + this.get_csrf(),
@@ -284,8 +288,8 @@
                 cancel: function (fileid, videos) {
                     console.log(videos)
                     if (confirm('确认取消上传？')) {
-                        var file = ybup.getFile(fileid);
-                        ybup.removeFile(file);
+                        var file = this.ybup.getFile(fileid);
+                        this.ybup.removeFile(file);
                         $('#' + fileid).remove();
                         file.destroy();
                         file.uploaded = false;
