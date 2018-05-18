@@ -48,7 +48,8 @@
                             <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
                         </div>
                         <div class="level-right">
-                            <button v-on:click="showModal=true">cover</button>
+                            <button class="button" v-on:click="showModal=true">封面</button>
+                            &nbsp;
                             <button v-on:click="submit" class="button is-dark">提交</button>
                         </div>
                     </nav>
