@@ -10,6 +10,7 @@
     "serve:electron": "vue-cli-service serve:electron"
   },
   "dependencies": {
+    "bulma": "^0.7.1",
     "source-map-support": "^0.5.4",
     "vue": "^2.5.16"
   },
