@@ -1,0 +1,1 @@
+var WebUploader = require('./webuploader.html5only')
