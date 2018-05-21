@@ -1,19 +1,64 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
-  "main": "main.js",
+  "name": "electronic-uptool",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "start": "electron ."
+    "serve": "vue-cli-service serve --open",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "build:electron": "vue-cli-service build:electron",
+    "serve:electron": "vue-cli-service serve:electron"
   },
-  "repository": "http://git.bilibili.co/xiazhongyang/electronic-uptool",
-  "keywords": [
-    "Electron",
-    "demo"
-  ],
-  "author": "Xia Zhongyang",
-  "license": "UNLICENSED",
+  "dependencies": {
+    "source-map-support": "^0.5.4",
+    "vue": "^2.5.16"
+  },
   "devDependencies": {
-    "electron": "^2.0.0"
+    "@vue/cli-plugin-babel": "^3.0.0-beta.10",
+    "@vue/cli-plugin-eslint": "^3.0.0-beta.10",
+    "@vue/cli-service": "^3.0.0-beta.10",
+    "electron": "^2.0.1",
+    "electron-builder": "^20.13.4",
+    "electron-webpack": "^2.1.1",
+    "vue-cli-plugin-electron-builder": "^0.3.0",
+    "vue-template-compiler": "^2.5.13"
+  },
+  "babel": {
+    "presets": [
+      "@vue/app"
+    ]
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ]
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "electronWebpack": {
+    "renderer": {
+      "sourceDirectory": "src",
+      "webpackConfig": "dist_electron/webpack.renderer.additions.js"
+    }
+  },
+  "build": {
+    "directories": {
+      "output": "dist_electron"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ]
   }
 }
