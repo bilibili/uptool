@@ -161,17 +161,6 @@ export default {
     };
   },
   methods: {
-    get_csrf: function() {
-      const { session } = require("electron").remote;
-      session.defaultSession.cookies.get(
-        { name: "bili_jct" },
-        (error, cookies) => {
-          console.log(error, cookies);
-          csrf = cookies[0]["value"];
-        }
-      );
-      return csrf;
-    },
     submit: function() {
       videos = [];
       for (i = 0; i < this.videos.length; i++) {
@@ -266,13 +255,19 @@ export default {
       }
     },
     submit_cover_and_video: function(req) {
+      const { session } = require("electron").remote;
+      var csrf;
+      session.defaultSession.cookies.get(
+        { name: "bili_jct" },
+        (error, cookies) => {
+          csrf = cookies[0]["value"];
       $.ajax({
         type: "POST",
         url: "https://member.bilibili.com/x/vu/web/cover/up",
         contentType: "application/x-www-form-urlencoded",
         data: {
           cover: this.cropped_cover,
-          csrf: this.get_csrf()
+              csrf
         },
         dataType: "json",
         success: result => {
@@ -288,11 +283,20 @@ export default {
           }
         }
       });
+        }
+      );
     },
     submit_video: function(req) {
+      const { session } = require("electron").remote;
+      var csrf;
+      session.defaultSession.cookies.get(
+        { name: "bili_jct" },
+        (error, cookies) => {
+          csrf = cookies[0]["value"];
+          if (csrf) {
       $.ajax({
         type: "POST",
-        url: "http://member.bilibili.com/x/vu/web/add?csrf=" + this.get_csrf(),
+              url: "http://member.bilibili.com/x/vu/web/add?csrf=" + csrf,
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(req),
         dataType: "json",
@@ -311,6 +315,9 @@ export default {
           }
         }
       });
+    }
+        }
+      );
     }
   },
   created: function() {
