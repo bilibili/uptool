@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "bulma": "^0.7.1",
+    "jquery": "^3.3.1",
     "source-map-support": "^0.5.4",
     "vue": "^2.5.16",
     "vue-router": "^3.0.1"
@@ -51,6 +52,9 @@
     "renderer": {
       "sourceDirectory": "src",
       "webpackConfig": "dist_electron/webpack.renderer.additions.js"
+    },
+    "main": {
+      "extraEntries": ["./src/js/ybuploader.full.js"]
     }
   },
   "build": {
