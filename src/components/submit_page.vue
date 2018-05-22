@@ -75,7 +75,7 @@
 <script>
 import crop_modal from "./crop_modal.vue";
 // import WebUploader from "../js/webuploader.html5only"
-import {ybuploader} from "../js/ybuploader.full"
+import { ybuploader } from "../js/ybuploader.full";
 
 export default {
   name: "submit_page",
@@ -162,9 +162,9 @@ export default {
   },
   methods: {
     submit: function() {
-      videos = [];
-      for (i = 0; i < this.videos.length; i++) {
-        file = this.videos[i];
+      var videos = [];
+      for (var i = 0; i < this.videos.length; i++) {
+        var file = this.videos[i];
         if (!file.uploaded) {
           var notif = new Notification("有正在进行的上传，请等待完成或取消");
           return false;
@@ -248,7 +248,7 @@ export default {
         file.destroy();
         file.uploaded = false;
 
-        index = videos.indexOf(file);
+        var index = videos.indexOf(file);
         if (index >= 0) {
           videos.splice(index, 1);
         }
@@ -261,28 +261,28 @@ export default {
         { name: "bili_jct" },
         (error, cookies) => {
           csrf = cookies[0]["value"];
-      $.ajax({
-        type: "POST",
-        url: "https://member.bilibili.com/x/vu/web/cover/up",
-        contentType: "application/x-www-form-urlencoded",
-        data: {
-          cover: this.cropped_cover,
+          $.ajax({
+            type: "POST",
+            url: "https://member.bilibili.com/x/vu/web/cover/up",
+            contentType: "application/x-www-form-urlencoded",
+            data: {
+              cover: this.cropped_cover,
               csrf
-        },
-        dataType: "json",
-        success: result => {
-          console.log(result);
-          if (result.code == 0) {
-            // perform ajax submit
-            cover_url = result["data"]["url"];
-            req["cover"] = cover_url;
-            return this.submit_video(req);
-          } else {
-            var notif = new Notification(result.message);
-            return false;
-          }
-        }
-      });
+            },
+            dataType: "json",
+            success: result => {
+              console.log(result);
+              if (result.code == 0) {
+                // perform ajax submit
+                cover_url = result["data"]["url"];
+                req["cover"] = cover_url;
+                return this.submit_video(req);
+              } else {
+                var notif = new Notification(result.message);
+                return false;
+              }
+            }
+          });
         }
       );
     },
@@ -294,28 +294,28 @@ export default {
         (error, cookies) => {
           csrf = cookies[0]["value"];
           if (csrf) {
-      $.ajax({
-        type: "POST",
+            $.ajax({
+              type: "POST",
               url: "http://member.bilibili.com/x/vu/web/add?csrf=" + csrf,
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(req),
-        dataType: "json",
-        success: function(result) {
-          console.log(result);
-          if (result.code == 0) {
-            // if (confirm('成功！前往稿件管理？(需等待大概1分钟才会有)')) {
-            //     openNewTab("http://member.bilibili.com/v/#!/article");
-            // }
-            // setTimeout(function () { window.location = window.location }, 500);
-            var notif = new Notification("上传成功！");
-            return true;
-          } else {
-            var notif = new Notification(result.message);
-            return false;
+              contentType: "application/json; charset=utf-8",
+              data: JSON.stringify(req),
+              dataType: "json",
+              success: function(result) {
+                console.log(result);
+                if (result.code == 0) {
+                  // if (confirm('成功！前往稿件管理？(需等待大概1分钟才会有)')) {
+                  //     openNewTab("http://member.bilibili.com/v/#!/article");
+                  // }
+                  // setTimeout(function () { window.location = window.location }, 500);
+                  var notif = new Notification("上传成功！");
+                  return true;
+                } else {
+                  var notif = new Notification(result.message);
+                  return false;
+                }
+              }
+            });
           }
-        }
-      });
-    }
         }
       );
     }
