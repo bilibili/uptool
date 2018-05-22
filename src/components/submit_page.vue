@@ -73,8 +73,13 @@
 </template>
 
 <script>
+import crop_modal from './crop_modal.vue'
+
 export default {
   name: "submit_page",
+  components: {
+    'crop-modal': crop_modal
+  },
   data() {
     return {
       ybup: {},
