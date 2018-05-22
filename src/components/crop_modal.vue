@@ -19,6 +19,7 @@
     </div>
 </template>
 <script>
+import Cropper from 'cropperjs'
 export default {
   name: "crop-modal",
   methods: {
