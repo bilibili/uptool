@@ -1,84 +1,86 @@
 <template>
-    <div>
-        <div class="box">
-            <nav class="level">
-                <div class="level-left">
-                    <span id="selectfiles" class="webuploader-container">新建投稿</span>
-                    &nbsp;
-                    <button id="start" v-show='is_paused && is_uploading' v-on:click="ybup.start(); is_paused=false" class="button is-light"> 继续上传 </button>
-                    <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
-                </div>
-                <div class="level-right">
-                    <button class="button" v-on:click="showModal=true">封面</button>
-                    &nbsp;
-                    <button v-on:click="submit" class="button is-dark">提交</button>
-                </div>
-            </nav>
+  <div>
+    <div class="box">
+      <nav class="level">
+        <div class="level-left">
+          <span id="selectfiles" class="webuploader-container">新建投稿</span>
+          &nbsp;
+          <button id="start" v-show='is_paused && is_uploading' v-on:click="ybup.start(); is_paused=false" class="button is-light"> 继续上传 </button>
+          <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
         </div>
-
-        <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data"></crop-modal>
-
-        <div class="box" style="height:500px; overflow-y:scroll;">
-            <div id="filelist" v-for="video in videos">
-                <a v-on:click="cancel(video.id, videos)">取消</a>
-                {{video.name}}
-                <span v-show="video.status=='progress'">正在上传</span>
-                <span v-show="video.status=='error'">错误</span>
-                <span v-show="video.status=='complete'">完成</span>
-                <progress class="progress" max="100" :value=video.percent></progress>
-            </div>
-            <br>
-
-            <form id="form">
-
-                <div class="field">
-                    <label class="label">稿件标题</label>
-                    <div class="control">
-                        <input name="title" class="input" type="text" placeholder="Text input">
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">标签(逗号分隔)</label>
-                    <div class="control">
-                        <input name="tag" class="input" type="text" placeholder="如：动作,MAD">
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label class="label">视频简介</label>
-                    <div class="control">
-                        <textarea class="textarea" name="desc" type="text" placeholder="请输入简介"></textarea>
-                    </div>
-                </div>
-
-                <label class="label">类型</label>
-                <div class="field">
-                    <div class="control">
-                        <label class="radio">
-                            <input name="copyright" value="1" type="radio"> 自制
-                        </label>
-                        <label class="radio">
-                            <input name="copyright" value="2" type="radio"> 转载
-                        </label>
-                    </div>
-                    <select name="tid">
-                        <option v-for="category in categories" :value="category.id">{{category.name}}</option>
-                    </select>
-                </div>
-
-            </form>
+        <div class="level-right">
+          <button class="button" v-on:click="showModal=true">封面</button>
+          &nbsp;
+          <button v-on:click="submit" class="button is-dark">提交</button>
         </div>
+      </nav>
     </div>
+
+    <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data"></crop-modal>
+
+    <div class="box" style="height:500px; overflow-y:scroll;">
+      <div id="filelist" v-for="video in videos">
+        <a v-on:click="cancel(video.id, videos)">取消</a>
+        {{video.name}}
+        <span v-show="video.status=='progress'">正在上传</span>
+        <span v-show="video.status=='error'">错误</span>
+        <span v-show="video.status=='complete'">完成</span>
+        <progress class="progress" max="100" :value=video.percent></progress>
+      </div>
+      <br>
+
+      <form id="form">
+
+        <div class="field">
+          <label class="label">稿件标题</label>
+          <div class="control">
+            <input name="title" class="input" type="text" placeholder="Text input">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">标签(逗号分隔)</label>
+          <div class="control">
+            <input name="tag" class="input" type="text" placeholder="如：动作,MAD">
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">视频简介</label>
+          <div class="control">
+            <textarea class="textarea" name="desc" type="text" placeholder="请输入简介"></textarea>
+          </div>
+        </div>
+
+        <label class="label">类型</label>
+        <div class="field">
+          <div class="control">
+            <label class="radio">
+              <input name="copyright" value="1" type="radio"> 自制
+            </label>
+            <label class="radio">
+              <input name="copyright" value="2" type="radio"> 转载
+            </label>
+          </div>
+          <select name="tid">
+            <option v-for="category in categories" :value="category.id">{{category.name}}</option>
+          </select>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </template>
 
 <script>
-import crop_modal from './crop_modal.vue'
+import crop_modal from "./crop_modal.vue";
+// import WebUploader from "../js/webuploader.html5only"
+import {ybuploader} from "../js/ybuploader.full"
 
 export default {
   name: "submit_page",
   components: {
-    'crop-modal': crop_modal
+    "crop-modal": crop_modal
   },
   data() {
     return {

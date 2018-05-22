@@ -8,6 +8,7 @@
  * @author tangjunxing, yangshangxin
  * 
  */
+export {ybuploader};
 
 var ybuploader = WebUploader;
 
