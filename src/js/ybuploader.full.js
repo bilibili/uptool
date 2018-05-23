@@ -12140,6 +12140,7 @@ exports.format = function (f) {
  * @author tangjunxing, yangshangxin
  * 
  */
+export {ybuploader};
 
 var ybuploader = WebUploader;
 
