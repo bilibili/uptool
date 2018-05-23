@@ -16,12 +16,22 @@ function createMainWindow() {
     }
   })
 
-  if (isDevelopment) {
-    window.webContents.openDevTools()
+  const { session } = require('electron')
+
+  // manipulate the http headers
+  const filters = {
+    urls: ['*://*.bilibili.com']
   }
+
+  session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
+    details.requestHeaders['Origin'] = 'https://member.bilibili.com'
+    details.requestHeaders['Referer'] = 'https://member.bilibili.com'
+    callback({ cancel: false, requestHeaders: details.requestHeaders })
+  })
 
   if (isDevelopment) {
     window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
+    window.webContents.openDevTools()
     // if you see this, don't do strange things to my account, thank you
     const cookies = [
       { url: 'http://.bilibili.com', name: 'fts', value: '1501048940' },
@@ -41,7 +51,8 @@ function createMainWindow() {
       // your cookie goes here (testing only)
     ]
 
-    const { session } = require('electron')
+
+    // add the cookies
     for (var i = 0; i < cookies.length; i++) {
       console.log(cookies[i])
       session.defaultSession.cookies.set(cookies[i], (error) => {
