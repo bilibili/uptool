@@ -296,7 +296,7 @@ export default {
           if (csrf) {
             $.ajax({
               type: "POST",
-              url: "http://member.bilibili.com/x/vu/web/add?csrf=" + csrf,
+              url: "https://member.bilibili.com/x/vu/web/add?csrf=" + csrf,
               contentType: "application/json; charset=utf-8",
               data: JSON.stringify(req),
               dataType: "json",
