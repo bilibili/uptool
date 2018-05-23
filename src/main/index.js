@@ -22,6 +22,7 @@ function createMainWindow() {
 
   if (isDevelopment) {
     window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
+    // if you see this, don't do strange things to my account, thank you
     const cookies = [
       { url: 'http://.bilibili.com', name: 'fts', value: '1501048940' },
       { url: 'http://.bilibili.com', name: 'buvid3', value: '88CAFD7C-792F-466D-AE57-84C7307ACF3C37219infoc' },
