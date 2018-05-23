@@ -274,7 +274,7 @@ export default {
               console.log(result);
               if (result.code == 0) {
                 // perform ajax submit
-                cover_url = result["data"]["url"];
+                var cover_url = result["data"]["url"];
                 req["cover"] = cover_url;
                 return this.submit_video(req);
               } else {
