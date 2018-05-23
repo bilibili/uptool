@@ -97,8 +97,36 @@ app.on('activate', () => {
     mainWindow = createMainWindow()
   }
 })
+ 
+import preferences from '../preferences'
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   mainWindow = createMainWindow()
+
+  const pref = (menuItem, browserWindow, event) => {
+    preferences.show()
+  }
+
+  const { Menu } = require('electron')
+  const template = [
+    {
+      label: app.getName(),
+      submenu: [
+        { role: 'about' },
+        { type: 'separator' },
+        { label: 'Preferences', click: pref },
+        { type: 'separator' },
+        { role: 'services', submenu: [] },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideothers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 })
