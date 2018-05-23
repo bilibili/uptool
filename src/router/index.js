@@ -7,7 +7,7 @@ Vue.use(Router)
 
 const routes = [
     { path: "/submit", component: submit_page },
-    { path: "/crop", component: second_page_placeholder }
+    { path: "/placeholder", component: second_page_placeholder }
   ];
   
 

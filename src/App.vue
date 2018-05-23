@@ -2,7 +2,7 @@
   <div id="app">
     <p>
       <router-link to="/submit">Submit</router-link>
-      <router-link to="/crop">Crop</router-link>
+      <router-link to="/placeholder">PlaceHolder</router-link>
     </p>
     <keep-alive>
       <router-view></router-view>
