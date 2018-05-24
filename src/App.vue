@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <p>
+    <p v-if="this.$route.path !== '/login'">
       <router-link to="/submit">Submit</router-link>
       <router-link to="/placeholder">PlaceHolder</router-link>
     </p>
-    <keep-alive>
+    <keep-alive include="submit_page">
       <router-view></router-view>
     </keep-alive>
   </div>
