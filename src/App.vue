@@ -1,21 +1,31 @@
 <template>
   <div id="app">
-    <p v-if="this.$route.path !== '/login'">
-      <router-link to="/submit">Submit</router-link>
-      <router-link to="/placeholder">PlaceHolder</router-link>
-    </p>
-    <keep-alive include="submit_page">
-      <router-view></router-view>
-    </keep-alive>
+    <div class="columns">
+      <div class="column is-one-quarter">
+        <p v-if="this.$route.path !== '/login'">
+          <sidebar></sidebar>
+        </p>
+      </div>
+      <div class="column">
+        <keep-alive include="submit_page">
+          <router-view></router-view>
+        </keep-alive>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-global.jQuery = require('jquery');
+import sidebar from "./components/sidebar.vue";
+
+global.jQuery = require("jquery");
 var $ = global.jQuery;
 window.$ = $;
 
 export default {
-  name: "app"
+  name: "app",
+  components: {
+    sidebar
+  }
 };
 </script>
