@@ -3,7 +3,7 @@
 import { app, BrowserWindow, session, ipcMain } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
-import preferences from '../preferences'
+import menuTemplate from '../menu'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -157,43 +157,7 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   login()
-  const pref = (menuItem, browserWindow, event) => {
-    preferences.show()
-  }
-
   const { Menu } = require('electron')
-  const template = [
-    {
-      label: app.getName(),
-      submenu: [
-        { role: 'about' },
-        { type: 'separator' },
-        { label: 'Preferences', click: pref },
-        { type: 'separator' },
-        { role: 'services', submenu: [] },
-        { type: 'separator' },
-        { role: 'hide' },
-        { role: 'hideothers' },
-        { role: 'unhide' },
-        { type: 'separator' },
-        { role: 'quit' }
-      ]
-    },
-    {
-      label: 'Edit',
-      submenu: [
-        {role: 'undo'},
-        {role: 'redo'},
-        {type: 'separator'},
-        {role: 'cut'},
-        {role: 'copy'},
-        {role: 'paste'},
-        {role: 'pasteandmatchstyle'},
-        {role: 'delete'},
-        {role: 'selectall'}
-      ]
-    }
-  ]
-  const menu = Menu.buildFromTemplate(template)
+  const menu = Menu.buildFromTemplate(menuTemplate)
   Menu.setApplicationMenu(menu)
 })
