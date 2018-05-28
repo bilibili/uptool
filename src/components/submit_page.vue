@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="box">
+  <div id="submit">
+    <div class="box" id="control">
       <nav class="level">
         <div class="level-left">
           <span id="selectfiles" class="webuploader-container">新建投稿</span>
@@ -62,9 +62,13 @@
               <input name="copyright" value="2" type="radio"> 转载
             </label>
           </div>
-          <select name="tid">
-            <option v-for="category in categories" :value="category.id">{{category.name}}</option>
-          </select>
+          <div class="control">
+            <div class="select is-rounded">
+              <select name="tid">
+                <option v-for="category in categories" :value="category.id">{{category.name}}</option>
+              </select>
+            </div>
+          </div>
         </div>
 
       </form>
@@ -434,3 +438,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+#submit {
+  height: 100vh;
+  overflow: hidden;
+}
+
+#control {
+  overflow: auto;
+}
+</style>
