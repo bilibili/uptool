@@ -87,8 +87,4 @@ iframe {
   height: 100%;
   zindex: 99999;
 }
-
-::-webkit-scrollbar {
-  display: none;
-}
 </style>

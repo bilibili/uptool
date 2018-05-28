@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <div class="columns">
-      <div class="column is-one-quarter">
+    <div class="columns is-gapless is-fullheight">
+      <div id="sidebar" class="column is-one-quarter">
         <p v-if="this.$route.path !== '/login'">
           <sidebar></sidebar>
         </p>
       </div>
-      <div class="column">
+      <div class="column is-main-content">
         <keep-alive include="submit_page">
           <router-view></router-view>
         </keep-alive>
@@ -29,3 +29,18 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.columns {
+  overflow: hidden;
+  height: 100vh;
+}
+.is-main-content {
+  overflow: auto;
+}
+</style>
+<style>
+::-webkit-scrollbar {
+  display: none;
+}
+</style>
