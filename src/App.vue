@@ -43,4 +43,7 @@ export default {
 ::-webkit-scrollbar {
   display: none;
 }
+.box {
+  margin: 1px;
+}
 </style>

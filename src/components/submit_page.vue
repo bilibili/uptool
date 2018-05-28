@@ -18,7 +18,7 @@
 
     <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data"></crop-modal>
 
-    <div class="box" style="height:500px; overflow-y:scroll;">
+    <div class="box">
       <div id="filelist" v-for="video in videos">
         <a v-on:click="cancel(video.id, videos)">取消</a>
         {{video.name}}
@@ -440,12 +440,10 @@ export default {
 </script>
 
 <style scoped>
-#submit {
-  height: 100vh;
-  overflow: hidden;
-}
-
 #control {
-  overflow: auto;
+  position: sticky;
+  top: 0;
+  margin-top: 0;
+  z-index: 999;
 }
 </style>
