@@ -48,6 +48,7 @@ function createMainWindow() {
     //   })
     // }
   } else {
+    window.webContents.openDevTools()
     window.loadURL(
       formatUrl({
         pathname: path.join(__dirname, 'index.html'),
@@ -100,7 +101,7 @@ ipcMain.on('loggedIn', (event, arg) => {
 })
 
 function login() {
-  session.defaultSession.cookies.get({domain: "bilibili.com"}, (error, cookies) => {
+  session.defaultSession.cookies.get({domain: "bilibili.com", name: 'bili_jct'}, (error, cookies) => {
     console.log(cookies)
     if (cookies.length > 0) {
       // logged in
@@ -125,12 +126,13 @@ function createLoginWindow() {
     loginWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/#/login`)
     loginWindow.webContents.openDevTools()
   } else {
+    loginWindow.webContents.openDevTools()
     loginWindow.loadURL(
       formatUrl({
-        pathname: path.join(__dirname, 'index.html') + '#/login',
+        pathname: path.join(__dirname, 'index.html'),
         protocol: 'file',
         slashes: true
-      })
+      })  + '#/login'
     )
   }
   return loginWindow
