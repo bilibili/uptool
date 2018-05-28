@@ -1,4 +1,4 @@
-const {app} = require('electron')
+const { app } = require('electron')
 import preferences from '../preferences'
 
 var template = [
@@ -54,10 +54,13 @@ if (process.platform === 'darwin') {
         submenu: [
             { role: 'about' },
             { type: 'separator' },
-            {label: 'Preferences',
-        click() {
-            preferences.show()
-        }},
+            {
+                label: 'Preferences',
+                click() {
+                    preferences.show()
+                },
+                accelerator: 'CmdOrCtrl+,'
+            },
             { type: 'separator' },
             { role: 'services', submenu: [] },
             { type: 'separator' },
