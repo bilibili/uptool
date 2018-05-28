@@ -46,6 +46,12 @@ export default {
         });
       $("iframe")
         .contents()
+        .find("#geestcp")
+        .css({
+          "-webkit-app-region": "no-drag"
+      });
+      $("iframe")
+        .contents()
         .find("#qrcode")
         .click(() => {
           resize()
