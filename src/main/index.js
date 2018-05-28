@@ -3,6 +3,7 @@
 import { app, BrowserWindow, session, ipcMain } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
+import preferences from '../preferences'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -124,7 +125,7 @@ function createLoginWindow() {
     loginWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/#/login`)
     loginWindow.webContents.openDevTools()
   } else {
-    window.loadURL(
+    loginWindow.loadURL(
       formatUrl({
         pathname: path.join(__dirname, 'index.html', '#/login'),
         protocol: 'file',
@@ -150,8 +151,6 @@ app.on('activate', () => {
     mainWindow = createMainWindow()
   }
 })
-
-import preferences from '../preferences'
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
