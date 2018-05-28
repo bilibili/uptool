@@ -4,8 +4,7 @@
 </template>
 
 <script>
-const { ipcRenderer } = require("electron");
-let { remote } = require('electron')
+const { ipcRenderer, remote } = require("electron");
 let win = remote.getCurrentWindow()
 export default {
   name: "login",

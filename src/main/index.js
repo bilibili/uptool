@@ -3,13 +3,13 @@
 import { app, BrowserWindow, session, ipcMain } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
-import menuTemplate from '../menu'
+import getMenuTemplate from '../menu'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
-
+let loginWindow
 function createMainWindow() {
   const window = new BrowserWindow({
     webPreferences: {
@@ -73,19 +73,27 @@ ipcMain.on('loggedIn', (event, arg) => {
   mainWindow = createMainWindow()
 })
 
+function logOut() {
+  session.defaultSession.clearStorageData(() => {
+    mainWindow.close()
+    loginWindow = createLoginWindow()
+  })
+  
+}
+
 function login() {
-  session.defaultSession.cookies.get({domain: "bilibili.com", name: 'bili_jct'}, (error, cookies) => {
+  session.defaultSession.cookies.get({ domain: "bilibili.com", name: 'bili_jct' }, (error, cookies) => {
     if (cookies.length > 0) {
       // logged in
       mainWindow = createMainWindow()
     } else {
-      const loginWindow = createLoginWindow()
+      loginWindow = createLoginWindow()
     }
   })
 }
 
 function createLoginWindow() {
-  const loginWindow = new BrowserWindow({
+  const window = new BrowserWindow({
     width: 420,
     height: 400,
     titleBarStyle: 'hidden',
@@ -95,19 +103,19 @@ function createLoginWindow() {
     }
   });
   if (isDevelopment) {
-    loginWindow.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/#/login`)
-    loginWindow.webContents.openDevTools()
+    window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/#/login`)
+    window.webContents.openDevTools()
   } else {
-    loginWindow.webContents.openDevTools()
-    loginWindow.loadURL(
+    window.webContents.openDevTools()
+    window.loadURL(
       formatUrl({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file',
         slashes: true
-      })  + '#/login'
+      }) + '#/login'
     )
   }
-  return loginWindow
+  return window
 }
 
 
@@ -130,6 +138,6 @@ app.on('activate', () => {
 app.on('ready', () => {
   login()
   const { Menu } = require('electron')
-  const menu = Menu.buildFromTemplate(menuTemplate)
+  const menu = Menu.buildFromTemplate(getMenuTemplate(logOut))
   Menu.setApplicationMenu(menu)
 })
