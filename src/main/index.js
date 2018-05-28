@@ -100,7 +100,7 @@ ipcMain.on('loggedIn', (event, arg) => {
 })
 
 function login() {
-  session.defaultSession.cookies.get({url: "*.bilibili.com"}, (error, cookies) => {
+  session.defaultSession.cookies.get({domain: "bilibili.com"}, (error, cookies) => {
     console.log(cookies)
     if (cookies.length > 0) {
       // logged in
