@@ -127,7 +127,7 @@ function createLoginWindow() {
   } else {
     loginWindow.loadURL(
       formatUrl({
-        pathname: path.join(__dirname, 'index.html', '#/login'),
+        pathname: path.join(__dirname, 'index.html') + '#/login',
         protocol: 'file',
         slashes: true
       })
