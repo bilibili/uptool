@@ -3,7 +3,7 @@
     <div class="box" id="control">
       <nav class="level">
         <div class="level-left">
-          <span id="selectfiles" class="webuploader-container">新建投稿</span>
+          <span id="selectfiles" class="button webuploader-container">新建投稿</span>
           &nbsp;
           <button id="start" v-show='is_paused && is_uploading' v-on:click="ybup.start(); is_paused=false" class="button is-light"> 继续上传 </button>
           <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
@@ -439,6 +439,35 @@ export default {
 };
 </script>
 
+<style>
+.webuploader-container {
+  position: relative;
+}
+.webuploader-element-invisible {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+.webuploader-pick {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  background: #00b7ee;
+  padding: calc(0.375em - 1px) 0.75em calc(0.375em - 1px) 0.75em;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.webuploader-pick-hover {
+  background: #00a2d4;
+}
+
+.webuploader-pick-disable {
+  opacity: 0.6;
+  pointer-events: none;
+}
+</style>
+
 <style scoped>
 #control {
   position: sticky;
@@ -447,4 +476,8 @@ export default {
   z-index: 1;
 }
 
+#selectfiles {
+  cursor: default;
+  border: 0;
+}
 </style>
