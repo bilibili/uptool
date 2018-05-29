@@ -486,11 +486,14 @@ export default {
   top: 0;
   margin-top: 0;
   z-index: 1;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 #selectfiles {
   cursor: default;
   border: 0;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .video-name {

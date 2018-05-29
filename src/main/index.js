@@ -13,7 +13,8 @@ let loginWindow
 function createMainWindow() {
   const window = new BrowserWindow({
     webPreferences: {
-      webSecurity: false
+      webSecurity: false,
+      experimentalFeatures: true
     }
   })
 
