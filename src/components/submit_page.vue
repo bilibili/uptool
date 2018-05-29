@@ -20,12 +20,26 @@
 
     <div class="box" id="content">
       <div id="filelist" v-for="video in videos">
-        
-        <a v-on:click="cancel(video.id, videos)"><font-awesome-icon icon="trash-alt" /></a>
-        {{video.name}}
-        <span v-show="video.status=='progress'">正在上传</span>
-        <span v-show="video.status=='error'">错误</span>
-        <span v-show="video.status=='complete'">完成</span>
+        <div class="columns">
+          <div class="column">
+              <font-awesome-icon v-show="video.status=='progress'" icon="upload" />
+              <font-awesome-icon v-show="video.status=='error'" icon="exclamation-triangle" />
+              <font-awesome-icon v-show="video.status=='complete'" icon="check-circle" />
+          </div>
+          <div class="column is-5">
+            <p class="video-name">{{video.name}}</p>
+          </div>
+          <div class="column is-5">
+            <span v-show="video.status=='progress'">正在上传</span>
+            <span v-show="video.status=='error'">错误</span>
+            <span v-show="video.status=='complete'">完成</span>
+          </div>
+          <div class="column">
+            <a v-on:click="cancel(video.id, videos)">
+              <font-awesome-icon icon="trash-alt" />
+            </a>
+          </div>
+        </div>
         <progress class="progress" max="100" :value=video.percent></progress>
       </div>
       <br>
@@ -84,7 +98,7 @@ import { ybuploader } from "../js/ybuploader.full";
 export default {
   name: "submit_page",
   components: {
-    "crop-modal": crop_modal,
+    "crop-modal": crop_modal
   },
   data() {
     return {
@@ -479,5 +493,11 @@ export default {
 #selectfiles {
   cursor: default;
   border: 0;
+}
+
+.video-name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 </style>
