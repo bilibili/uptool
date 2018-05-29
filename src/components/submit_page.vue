@@ -22,9 +22,9 @@
       <div id="filelist" v-for="video in videos">
         <div class="columns">
           <div class="column">
-              <font-awesome-icon v-show="video.status=='progress'" icon="upload" />
-              <font-awesome-icon v-show="video.status=='error'" icon="exclamation-triangle" />
-              <font-awesome-icon v-show="video.status=='complete'" icon="check-circle" />
+            <font-awesome-icon v-show="video.status=='progress'" icon="upload" />
+            <font-awesome-icon v-show="video.status=='error'" icon="exclamation-triangle" />
+            <font-awesome-icon v-show="video.status=='complete'" icon="check-circle" />
           </div>
           <div class="column is-5">
             <p class="video-name">{{video.name}}</p>
@@ -45,7 +45,24 @@
       <br>
 
       <form id="form">
-
+        <label class="label">投稿类型</label>
+        <div class="field">
+          <div class="control">
+            <label class="radio">
+              <input name="copyright" value="1" type="radio"> 自制
+            </label>
+            <label class="radio">
+              <input name="copyright" value="2" type="radio"> 转载
+            </label>
+          </div>
+          <div class="control">
+            <div class="select is-rounded">
+              <select name="tid">
+                <option v-for="category in categories" :value="category.id">{{category.name}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
         <div class="field">
           <label class="label">稿件标题</label>
           <div class="control">
@@ -64,25 +81,6 @@
           <label class="label">视频简介</label>
           <div class="control">
             <textarea class="textarea" name="desc" type="text" placeholder="请输入简介"></textarea>
-          </div>
-        </div>
-
-        <label class="label">类型</label>
-        <div class="field">
-          <div class="control">
-            <label class="radio">
-              <input name="copyright" value="1" type="radio"> 自制
-            </label>
-            <label class="radio">
-              <input name="copyright" value="2" type="radio"> 转载
-            </label>
-          </div>
-          <div class="control">
-            <div class="select is-rounded">
-              <select name="tid">
-                <option v-for="category in categories" :value="category.id">{{category.name}}</option>
-              </select>
-            </div>
           </div>
         </div>
 
