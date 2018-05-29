@@ -20,7 +20,8 @@
 
     <div class="box" id="content">
       <div id="filelist" v-for="video in videos">
-        <a v-on:click="cancel(video.id, videos)">取消</a>
+        
+        <a v-on:click="cancel(video.id, videos)"><font-awesome-icon icon="trash-alt" /></a>
         {{video.name}}
         <span v-show="video.status=='progress'">正在上传</span>
         <span v-show="video.status=='error'">错误</span>
@@ -78,13 +79,12 @@
 
 <script>
 import crop_modal from "./crop_modal.vue";
-// import WebUploader from "../js/webuploader.html5only"
 import { ybuploader } from "../js/ybuploader.full";
 
 export default {
   name: "submit_page",
   components: {
-    "crop-modal": crop_modal
+    "crop-modal": crop_modal,
   },
   data() {
     return {
