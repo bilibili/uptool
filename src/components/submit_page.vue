@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <div class="box">
+  <div id="submit">
+    <div class="box" id="control">
       <nav class="level">
         <div class="level-left">
-          <span id="selectfiles" class="webuploader-container">新建投稿</span>
+          <span id="selectfiles" class="button webuploader-container">新建投稿</span>
           &nbsp;
           <button id="start" v-show='is_paused && is_uploading' v-on:click="ybup.start(); is_paused=false" class="button is-light"> 继续上传 </button>
           <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
@@ -18,7 +18,7 @@
 
     <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data"></crop-modal>
 
-    <div class="box" style="height:500px; overflow-y:scroll;">
+    <div class="box" id="content">
       <div id="filelist" v-for="video in videos">
         <a v-on:click="cancel(video.id, videos)">取消</a>
         {{video.name}}
@@ -62,9 +62,13 @@
               <input name="copyright" value="2" type="radio"> 转载
             </label>
           </div>
-          <select name="tid">
-            <option v-for="category in categories" :value="category.id">{{category.name}}</option>
-          </select>
+          <div class="control">
+            <div class="select is-rounded">
+              <select name="tid">
+                <option v-for="category in categories" :value="category.id">{{category.name}}</option>
+              </select>
+            </div>
+          </div>
         </div>
 
       </form>
@@ -434,3 +438,46 @@ export default {
   }
 };
 </script>
+
+<style>
+.webuploader-container {
+  position: relative;
+}
+.webuploader-element-invisible {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+.webuploader-pick {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  background: #00b7ee;
+  padding: calc(0.375em - 1px) 0.75em calc(0.375em - 1px) 0.75em;
+  color: #fff;
+  text-align: center;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.webuploader-pick-hover {
+  background: #00a2d4;
+}
+
+.webuploader-pick-disable {
+  opacity: 0.6;
+  pointer-events: none;
+}
+</style>
+
+<style scoped>
+#control {
+  position: sticky;
+  top: 0;
+  margin-top: 0;
+  z-index: 1;
+}
+
+#selectfiles {
+  cursor: default;
+  border: 0;
+}
+</style>
