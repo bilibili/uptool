@@ -194,7 +194,7 @@ export default {
       }
 
       var formData = $("form").serializeArray();
-      var req = { videos: videos };
+      var req = { videos };
       formData.forEach(function(obj) {
         if (["copyright", "tid"].indexOf(obj.name) >= 0) {
           req[obj.name] = parseInt(obj.value);
