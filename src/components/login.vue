@@ -13,12 +13,13 @@ export default {
       // need to add the margins, a little bit smaller to make it looks elegant
           var height = $("iframe")
             .contents()
-            .find("#content").height() + 20
+            .find("#content").height() + 25
 
           var width = $("iframe")
             .contents()
-            .find("#content").width() + 85
-          win.setSize(width, height, true)
+            .find("#content").width() + 90
+          console.log(width, height)
+          win.setContentSize(width, height, true)
     }
     $("iframe").load(function() {
       // hack the css
