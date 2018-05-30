@@ -18,7 +18,7 @@ export default {
           // padding
           .height() + 25;
 
-      var width =
+      var width = 
         $("iframe")
           .contents()
           .find("#content")

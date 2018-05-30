@@ -1,6 +1,6 @@
 const { app, session } = require('electron')
 import preferences from '../preferences'
-function getMenuTemplate(logOut) {
+function getMenuTemplate(logOut, isLogOutEnabled) {
     var template = [
         {
             label: app.getName(),
@@ -15,7 +15,8 @@ function getMenuTemplate(logOut) {
                 { type: 'separator' },
                 {
                     label: 'Log Out',
-                    click: () => { logOut() }
+                    click: () => { logOut() },
+                    enabled: isLogOutEnabled
                 },
                 { role: 'quit' }
             ]
