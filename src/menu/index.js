@@ -3,6 +3,24 @@ import preferences from '../preferences'
 function getMenuTemplate(logOut) {
     var template = [
         {
+            label: app.getName(),
+            submenu: [
+                {
+                    label: 'Preferences',
+                    click() {
+                        preferences.show()
+                    },
+                    accelerator: 'CmdOrCtrl+,'
+                },
+                { type: 'separator' },
+                {
+                    label: 'Log Out',
+                    click: () => { logOut() }
+                },
+                { role: 'quit' }
+            ]
+        },
+        {
             label: 'Edit',
             submenu: [
                 { role: 'undo' },
@@ -49,34 +67,14 @@ function getMenuTemplate(logOut) {
     ]
 
     if (process.platform === 'darwin') {
-        template.unshift({
-            label: app.getName(),
-            submenu: [
-                { role: 'about' },
-                { type: 'separator' },
-                {
-                    label: 'Preferences',
-                    click() {
-                        preferences.show()
-                    },
-                    accelerator: 'CmdOrCtrl+,'
-                },
-                { type: 'separator' },
-                {
-                    label: 'Log Out',
-                    click: () => {logOut()}
-                },
-                { type: 'separator' },
-                { role: 'services', submenu: [] },
-                { type: 'separator' },
-                { role: 'hide' },
-                { role: 'hideothers' },
-                { role: 'unhide' },
-                { type: 'separator' },
-                { role: 'quit' }
-            ]
-        })
-
+        template[0].unshift({ role: 'about' }, { type: 'separator' })
+        template[0].slice(2, { type: 'separator' },
+        { role: 'services', submenu: [] },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideothers' },
+        { role: 'unhide' },
+        { type: 'separator' })
         // Edit menu
         template[1].submenu.push(
             { type: 'separator' },
