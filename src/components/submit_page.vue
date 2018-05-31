@@ -92,6 +92,7 @@
 <script>
 import crop_modal from "./crop_modal.vue";
 import { ybuploader } from "../js/ybuploader.full";
+const { ipcRenderer } = require("electron");
 
 export default {
   name: "submit_page",
@@ -421,6 +422,7 @@ export default {
         file.percent = 0;
         file.status = "";
         this.videos.push(file);
+        ipcRenderer.send("uploadingStarted");
       });
 
       this.ybup.bind("FileUploaded", (up, file, info) => {
@@ -432,6 +434,15 @@ export default {
         // }
         new Notification("上传成功", { body: file.name });
         this.is_uploading = false;
+
+        for (var i = 0; i < this.videos.length; i++) {
+          var file = this.videos[i];
+          if (!file.uploaded) {
+            ipcRenderer.send('uploadingStarted')
+          } else {
+            ipcRenderer.send('uploadingFinished')
+          }
+        }
       });
 
       this.ybup.bind("Error", function(up, err) {

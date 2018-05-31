@@ -52,7 +52,7 @@ export default new ElectronPreferences({
                         'label': '通知',
                         'fields': [{
                             'label': '提醒',
-                            'key': 'notification',
+                            'key': 'alert',
                             'type': 'checkbox',
                             'options': [
                                 {

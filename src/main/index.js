@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, session, ipcMain, Menu } from 'electron'
+import { app, BrowserWindow, session, ipcMain, Menu, dialog } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 import getMenuTemplate from '../menu'
@@ -11,7 +11,13 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
 let loginWindow
+let videoStatus
+
 function createMainWindow() {
+  videoStatus = {
+    isUploading: false
+  }
+
   const window = new BrowserWindow({
     webPreferences: {
       webSecurity: false,
@@ -33,8 +39,25 @@ function createMainWindow() {
     )
   }
 
-  window.on('closed', () => {
-    mainWindow = null
+  window.on('close', (e) => {
+    var alertSetting = preferences.value('notification.alert')
+    if (alertSetting && alertSetting.includes('unuploaded') && videoStatus.isUploading) {
+      let choice = dialog.showMessageBox(
+        {
+          type: 'question',
+          buttons: ['是', '否'],
+          title: '上传未完成',
+          message: '上传未完成，确认退出？'
+        }
+      )
+      if (choice === 1) {
+        e.preventDefault()
+      } else {
+        mainWindow = null
+      }
+    } else {
+      mainWindow = null
+    }
   })
 
   window.webContents.on('devtools-opened', () => {
@@ -53,7 +76,7 @@ function fakeHeader() {
     urls: [
       'https://member.bilibili.com/x/vu/web/cover/up',
       'https://member.bilibili.com/x/vu/web/add*'
-          ]
+    ]
   }
   session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
     details.requestHeaders['Origin'] = 'https://member.bilibili.com'
@@ -68,13 +91,21 @@ ipcMain.on('loggedIn', (event, arg) => {
   mainWindow = createMainWindow()
 })
 
+ipcMain.on('uploadingStarted', (event, arg) => {
+  videoStatus.isUploading = true
+})
+
+ipcMain.on('uploadingFinished', (event, arg) => {
+  videoStatus.isUploading = false
+})
+
 function logOut() {
   session.defaultSession.clearStorageData(() => {
     mainWindow.close()
     // clearHeader()
     loginWindow = createLoginWindow()
   })
-  
+
 }
 
 function login() {
