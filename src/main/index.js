@@ -58,26 +58,27 @@ function fakeHeader() {
   })
 }
 
-function clearHeader() {
-  const filters = {
-    urls: ['*://*.bilibili.com']
-  }
-  session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
-    details.requestHeaders['Origin'] = ''
-    details.requestHeaders['Referer'] = ''
-    callback({ cancel: false, requestHeaders: details.requestHeaders })
-  })
-}
+// function clearHeader() {
+//   const filters = {
+//     urls: ['*://*.bilibili.com']
+//   }
+//   session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
+//     details.requestHeaders['Origin'] = ''
+//     details.requestHeaders['Referer'] = ''
+//     callback({ cancel: false, requestHeaders: details.requestHeaders })
+//   })
+// }
 
 // logged in
 ipcMain.on('loggedIn', (event, arg) => {
-  fakeHeader()
+  // fakeHeader()
   mainWindow = createMainWindow()
 })
 
 function logOut() {
   session.defaultSession.clearStorageData(() => {
     mainWindow.close()
+    // clearHeader()
     loginWindow = createLoginWindow()
   })
   
@@ -89,6 +90,7 @@ function login() {
       // logged in
       mainWindow = createMainWindow()
     } else {
+      // clearHeader()
       loginWindow = createLoginWindow()
     }
   })
@@ -117,6 +119,13 @@ function createLoginWindow() {
       }) + '#/login'
     )
   }
+  window.webContents.on('will-navigate', (event, url) => {
+    if (url.includes('https://www.bilibili.com')) {
+      event.preventDefault()
+    }
+  })
+
+  // menu, disable logout
   const menu = Menu.buildFromTemplate(getMenuTemplate(logOut, false))
   Menu.setApplicationMenu(menu)
   return window
@@ -140,5 +149,6 @@ app.on('activate', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
+  // fakeHeader()
   login()
 })
