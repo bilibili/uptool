@@ -55,13 +55,35 @@
               <input name="copyright" value="2" type="radio" v-model="formData.copyright"> 转载
             </label>
           </div>
-          <div class="control">
+          <!-- <div class="control">
             <div class="select is-rounded">
               <select name="tid" v-model="formData.tid">
                 <option v-for="category in categories" :value="category.id">{{category.name}}</option>
               </select>
             </div>
+          </div> -->
+          <div v-for="halftype in halftypelist" class="columns is-gapless">
+            <div v-for="videotype in halftype" class="column">
+              <div class="dropdown" @click="clicked=(clicked == videotype.id)? undefined : videotype.id" :class="{'is-active':videotype.id == clicked}">
+                <div class="dropdown-trigger">
+                  <button class="button dropdown-button" aria-haspopup="true" :aria-controls="videotype.id" :class="{'is-danger': videotype.id == highlighted.parent}">
+                    <span>{{videotype.name}}</span>
+                    <span class="icon is-small">
+                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                  </button>
+                </div>
+                <div class="dropdown-menu" :id="videotype.id" role="menu">
+                  <div class="dropdown-content">
+                    <a v-for="subtype in videotype.children" class="dropdown-item" @click="highlighted.parent=subtype.parent; highlighted.child=subtype.id; formData.tid=subtype.id" :class="{'selected-dropdown': highlighted.child == subtype.id}">
+                      {{subtype.name}}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
         <div class="field">
           <label class="label">稿件标题</label>
@@ -101,75 +123,16 @@ export default {
   },
   data() {
     return {
+      highlighted: {
+        parent: undefined,
+        child: undefined
+      },
+      clicked: undefined,
+      preData: {},
+      typelist: [],
       formData: {},
       ybup: {},
       videos: [],
-      categories: [
-        { id: "24", name: "动画-MAD·AMV" },
-        { id: "25", name: "动画-MMD·3D" },
-        { id: "47", name: "动画-短片·手书·配音" },
-        { id: "27", name: "动画-综合" },
-        { id: "33", name: "番剧-连载动画" },
-        { id: "32", name: "番剧-完结动画" },
-        { id: "153", name: "番剧-国产动画" },
-        { id: "51", name: "番剧-资讯" },
-        { id: "152", name: "番剧-官方延伸" },
-        { id: "153", name: "国创-国产动画" },
-        { id: "168", name: "国创-国产原创相关" },
-        { id: "169", name: "国创-布袋戏" },
-        { id: "170", name: "国创-资讯" },
-        { id: "28", name: "音乐-原创音乐" },
-        { id: "31", name: "音乐-翻唱" },
-        { id: "30", name: "音乐-VOCALOID·UTAU" },
-        { id: "59", name: "音乐-演奏" },
-        { id: "29", name: "音乐-三次元音乐" },
-        { id: "54", name: "音乐-OP/ED/OST" },
-        { id: "130", name: "音乐-音乐选集" },
-        { id: "20", name: "舞蹈-宅舞" },
-        { id: "154", name: "舞蹈-三次元舞蹈" },
-        { id: "156", name: "舞蹈-舞蹈教程" },
-        { id: "17", name: "游戏-单机联机" },
-        { id: "65", name: "游戏-网游·电竞" },
-        { id: "136", name: "游戏-音游" },
-        { id: "19", name: "游戏-Mugen" },
-        { id: "121", name: "游戏-GMV" },
-        { id: "37", name: "科技-纪录片" },
-        { id: "124", name: "科技-趣味科普人文" },
-        { id: "122", name: "科技-野生技术协会" },
-        { id: "39", name: "科技-演讲• 公开课" },
-        { id: "96", name: "科技-星海" },
-        { id: "95", name: "科技-数码" },
-        { id: "98", name: "科技-机械" },
-        { id: "71", name: "娱乐-综艺" },
-        { id: "137", name: "娱乐-明星" },
-        { id: "131", name: "娱乐-Korea相关" },
-        { id: "22", name: "鬼畜-鬼畜调教" },
-        { id: "26", name: "鬼畜-音MAD" },
-        { id: "126", name: "鬼畜-人力VOCALOID" },
-        { id: "127", name: "鬼畜-教程演示" },
-        { id: "82", name: "电影-电影相关" },
-        { id: "85", name: "电影-短片" },
-        { id: "145", name: "电影-欧美电影" },
-        { id: "146", name: "电影-日本电影" },
-        { id: "147", name: "电影-国产电影" },
-        { id: "83", name: "电影-其他国家" },
-        { id: "15", name: "电视剧-连载剧集" },
-        { id: "34", name: "电视剧-完结剧集" },
-        { id: "128", name: "电视剧-电视剧相关" },
-        { id: "86", name: "电视剧-特摄·布袋" },
-        { id: "157", name: "时尚-美妆" },
-        { id: "158", name: "时尚-服饰" },
-        { id: "164", name: "时尚-健身" },
-        { id: "159", name: "时尚-资讯" },
-        { id: "138", name: "生活-搞笑" },
-        { id: "21", name: "生活-日常" },
-        { id: "76", name: "生活-美食圈" },
-        { id: "75", name: "生活-动物圈" },
-        { id: "161", name: "生活-手工" },
-        { id: "162", name: "生活-绘画" },
-        { id: "163", name: "生活-运动" },
-        { id: "166", name: "广告-广告" }
-      ],
       is_paused: false,
       is_uploading: false,
       showModal: false,
@@ -177,6 +140,16 @@ export default {
       cropped_cover: "",
       cropper_data: null
     };
+  },
+  computed: {
+    halftypelist: function() {
+      if (this.typelist) {
+        var mid = Math.ceil(this.typelist.length / 2);
+        return [this.typelist.slice(0, mid), this.typelist.slice(mid)];
+      } else {
+        return [[], []];
+      }
+    }
   },
   methods: {
     submit: function() {
@@ -363,6 +336,15 @@ export default {
     }
   },
   created: function() {
+    $.getJSON(
+      "https://member.bilibili.com/x/web/archive/pre?langs=cn",
+      json => {
+        if (json.code == 0) {
+          this.preData = json;
+          this.typelist = json.data.typelist;
+        }
+      }
+    );
     if (window.module) {
       module = window.module;
     }
@@ -510,6 +492,9 @@ export default {
 </style>
 
 <style scoped>
+.dropdown-button {
+  width: 8vw;
+}
 #control {
   position: sticky;
   top: 0;
@@ -530,5 +515,9 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.selected-dropdown {
+  background-color: #64b5f6;
 }
 </style>
