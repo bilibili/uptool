@@ -49,7 +49,10 @@ function createMainWindow() {
 // fake the headers to member.bilibili.com to fool the server
 function fakeHeader() {
   const filters = {
-    urls: ['*://*.bilibili.com']
+    urls: [
+      'https://member.bilibili.com/x/vu/web/cover/up',
+      'https://member.bilibili.com/x/vu/web/add*'
+          ]
   }
   session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
     details.requestHeaders['Origin'] = 'https://member.bilibili.com'
@@ -57,17 +60,6 @@ function fakeHeader() {
     callback({ cancel: false, requestHeaders: details.requestHeaders })
   })
 }
-
-// function clearHeader() {
-//   const filters = {
-//     urls: ['*://*.bilibili.com']
-//   }
-//   session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
-//     details.requestHeaders['Origin'] = ''
-//     details.requestHeaders['Referer'] = ''
-//     callback({ cancel: false, requestHeaders: details.requestHeaders })
-//   })
-// }
 
 // logged in
 ipcMain.on('loggedIn', (event, arg) => {
@@ -149,6 +141,6 @@ app.on('window-all-closed', () => {
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
-  // fakeHeader()
+  fakeHeader()
   login()
 })
