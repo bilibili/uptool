@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, session, ipcMain } from 'electron'
+import { app, BrowserWindow, session, ipcMain, Menu } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 import getMenuTemplate from '../menu'
@@ -13,7 +13,8 @@ let loginWindow
 function createMainWindow() {
   const window = new BrowserWindow({
     webPreferences: {
-      webSecurity: false
+      webSecurity: false,
+      experimentalFeatures: true
     }
   })
 
@@ -41,13 +42,17 @@ function createMainWindow() {
       window.focus()
     })
   })
-
+  const menu = Menu.buildFromTemplate(getMenuTemplate(logOut, true))
+  Menu.setApplicationMenu(menu)
   return window
 }
 // fake the headers to member.bilibili.com to fool the server
 function fakeHeader() {
   const filters = {
-    urls: ['*://*.bilibili.com']
+    urls: [
+      'https://member.bilibili.com/x/vu/web/cover/up',
+      'https://member.bilibili.com/x/vu/web/add*'
+          ]
   }
   session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
     details.requestHeaders['Origin'] = 'https://member.bilibili.com'
@@ -56,26 +61,16 @@ function fakeHeader() {
   })
 }
 
-function clearHeader() {
-  const filters = {
-    urls: ['*://*.bilibili.com']
-  }
-  session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
-    details.requestHeaders['Origin'] = ''
-    details.requestHeaders['Referer'] = ''
-    callback({ cancel: false, requestHeaders: details.requestHeaders })
-  })
-}
-
 // logged in
 ipcMain.on('loggedIn', (event, arg) => {
-  fakeHeader()
+  // fakeHeader()
   mainWindow = createMainWindow()
 })
 
 function logOut() {
   session.defaultSession.clearStorageData(() => {
     mainWindow.close()
+    // clearHeader()
     loginWindow = createLoginWindow()
   })
   
@@ -87,6 +82,7 @@ function login() {
       // logged in
       mainWindow = createMainWindow()
     } else {
+      // clearHeader()
       loginWindow = createLoginWindow()
     }
   })
@@ -102,6 +98,9 @@ function createLoginWindow() {
       webSecurity: false
     }
   });
+  window.on('closed', () => {
+    loginWindow = null
+  })
   if (isDevelopment) {
     window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/#/login`)
     window.webContents.openDevTools()
@@ -115,6 +114,10 @@ function createLoginWindow() {
       }) + '#/login'
     )
   }
+
+  // menu, disable logout
+  const menu = Menu.buildFromTemplate(getMenuTemplate(logOut, false))
+  Menu.setApplicationMenu(menu)
   return window
 }
 
@@ -129,15 +132,13 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   // on macOS it is common to re-create a window even after all windows have been closed
-  if (mainWindow === null) {
-    mainWindow = createMainWindow()
+  if (mainWindow == null && loginWindow == null) {
+    login()
   }
 })
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
+  fakeHeader()
   login()
-  const { Menu } = require('electron')
-  const menu = Menu.buildFromTemplate(getMenuTemplate(logOut))
-  Menu.setApplicationMenu(menu)
 })

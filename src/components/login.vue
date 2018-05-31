@@ -5,20 +5,27 @@
 
 <script>
 const { ipcRenderer, remote } = require("electron");
-let win = remote.getCurrentWindow()
+let win = remote.getCurrentWindow();
 export default {
   name: "login",
   mounted: function() {
-    function resize () {
+    function resize() {
       // need to add the margins, a little bit smaller to make it looks elegant
-          var height = $("iframe")
-            .contents()
-            .find("#content").height() + 20
+      var height =
+        $("iframe")
+          .contents()
+          .find("#content")
+          // padding
+          .height() + 25;
 
-          var width = $("iframe")
-            .contents()
-            .find("#content").width() + 85
-          win.setSize(width, height, true)
+      var width = 
+        $("iframe")
+          .contents()
+          .find("#content")
+          // padding
+          .width() + 90;
+      console.log(width, height);
+      win.setContentSize(width, height, true);
     }
     $("iframe").load(function() {
       // hack the css
@@ -48,18 +55,18 @@ export default {
         .find("#geestcp")
         .css({
           "-webkit-app-region": "no-drag"
-      });
+        });
       $("iframe")
         .contents()
         .find("#qrcode")
         .click(() => {
-          resize()
+          resize();
         });
       $("iframe")
         .contents()
         .find("#tab-nav")
         .click(() => {
-          resize()
+          resize();
         });
     });
 

@@ -2,9 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import 'bulma/css/bulma.css'
-// require("./js/ybuploader")
+import FontAwesomeIcon from '@fortawesome/vue-fontawesome';
+import fontawesome from '@fortawesome/fontawesome';
+import solid from '@fortawesome/fontawesome-free-solid';
+fontawesome.library.add(solid);
 
 Vue.config.productionTip = false
+Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 new Vue({
   router,

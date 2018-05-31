@@ -20,17 +20,49 @@
 
     <div class="box" id="content">
       <div id="filelist" v-for="video in videos">
-        <a v-on:click="cancel(video.id, videos)">取消</a>
-        {{video.name}}
-        <span v-show="video.status=='progress'">正在上传</span>
-        <span v-show="video.status=='error'">错误</span>
-        <span v-show="video.status=='complete'">完成</span>
+        <div class="columns">
+          <div class="column">
+            <font-awesome-icon v-show="video.status=='progress'" icon="upload" />
+            <font-awesome-icon v-show="video.status=='error'" icon="exclamation-triangle" />
+            <font-awesome-icon v-show="video.status=='complete'" icon="check-circle" />
+          </div>
+          <div class="column is-5">
+            <p class="video-name">{{video.name}}</p>
+          </div>
+          <div class="column is-5">
+            <span v-show="video.status=='progress'">正在上传</span>
+            <span v-show="video.status=='error'">错误</span>
+            <span v-show="video.status=='complete'">完成</span>
+          </div>
+          <div class="column">
+            <a v-on:click="cancel(video.id, videos)">
+              <font-awesome-icon icon="trash-alt" />
+            </a>
+          </div>
+        </div>
         <progress class="progress" max="100" :value=video.percent></progress>
       </div>
       <br>
 
       <form id="form">
-
+        <label class="label">投稿类型</label>
+        <div class="field">
+          <div class="control">
+            <label class="radio">
+              <input name="copyright" value="1" type="radio"> 自制
+            </label>
+            <label class="radio">
+              <input name="copyright" value="2" type="radio"> 转载
+            </label>
+          </div>
+          <div class="control">
+            <div class="select is-rounded">
+              <select name="tid">
+                <option v-for="category in categories" :value="category.id">{{category.name}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
         <div class="field">
           <label class="label">稿件标题</label>
           <div class="control">
@@ -52,25 +84,6 @@
           </div>
         </div>
 
-        <label class="label">类型</label>
-        <div class="field">
-          <div class="control">
-            <label class="radio">
-              <input name="copyright" value="1" type="radio"> 自制
-            </label>
-            <label class="radio">
-              <input name="copyright" value="2" type="radio"> 转载
-            </label>
-          </div>
-          <div class="control">
-            <div class="select is-rounded">
-              <select name="tid">
-                <option v-for="category in categories" :value="category.id">{{category.name}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
       </form>
     </div>
   </div>
@@ -78,7 +91,6 @@
 
 <script>
 import crop_modal from "./crop_modal.vue";
-// import WebUploader from "../js/webuploader.html5only"
 import { ybuploader } from "../js/ybuploader.full";
 
 export default {
@@ -182,7 +194,7 @@ export default {
       }
 
       var formData = $("form").serializeArray();
-      var req = { videos: videos };
+      var req = { videos };
       formData.forEach(function(obj) {
         if (["copyright", "tid"].indexOf(obj.name) >= 0) {
           req[obj.name] = parseInt(obj.value);
@@ -474,10 +486,19 @@ export default {
   top: 0;
   margin-top: 0;
   z-index: 1;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 #selectfiles {
   cursor: default;
   border: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.video-name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 </style>
