@@ -49,15 +49,15 @@
         <div class="field">
           <div class="control">
             <label class="radio">
-              <input name="copyright" value="1" type="radio"> 自制
+              <input name="copyright" value="1" type="radio" v-model="formData.copyright"> 自制
             </label>
             <label class="radio">
-              <input name="copyright" value="2" type="radio"> 转载
+              <input name="copyright" value="2" type="radio" v-model="formData.copyright"> 转载
             </label>
           </div>
           <div class="control">
             <div class="select is-rounded">
-              <select name="tid">
+              <select name="tid" v-model="formData.tid">
                 <option v-for="category in categories" :value="category.id">{{category.name}}</option>
               </select>
             </div>
@@ -66,21 +66,21 @@
         <div class="field">
           <label class="label">稿件标题</label>
           <div class="control">
-            <input name="title" class="input" type="text" placeholder="Text input">
+            <input name="title" class="input" type="text" placeholder="Text input" v-model="formData.title">
           </div>
         </div>
 
         <div class="field">
           <label class="label">标签(逗号分隔)</label>
           <div class="control">
-            <input name="tag" class="input" type="text" placeholder="如：动作,MAD">
+            <input name="tag" class="input" type="text" placeholder="动作,MAD" v-model="formData.tag">
           </div>
         </div>
 
         <div class="field">
           <label class="label">视频简介</label>
           <div class="control">
-            <textarea class="textarea" name="desc" type="text" placeholder="请输入简介"></textarea>
+            <textarea class="textarea" name="desc" type="text" placeholder="请输入简介" v-model="formData.desc"></textarea>
           </div>
         </div>
 
@@ -101,6 +101,7 @@ export default {
   },
   data() {
     return {
+      formData: {},
       ybup: {},
       videos: [],
       categories: [
@@ -194,15 +195,16 @@ export default {
         }
       }
 
-      var formData = $("form").serializeArray();
+      // var formData = $("form").serializeArray();
       var req = { videos };
-      formData.forEach(function(obj) {
-        if (["copyright", "tid"].indexOf(obj.name) >= 0) {
-          req[obj.name] = parseInt(obj.value);
+      // this.formData.forEach(function(obj) {
+      for (const [key, value] of Object.entries(this.formData)) {
+        if (["copyright", "tid"].indexOf(key) >= 0) {
+          req[key] = parseInt(value);
         } else {
-          req[obj.name] = obj.value;
+          req[key] = value;
         }
-      });
+      }
 
       if (videos.length == 0) {
         var notif = new Notification("请至少添加一个视频");
