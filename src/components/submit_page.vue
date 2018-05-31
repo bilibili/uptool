@@ -344,10 +344,12 @@ export default {
                   //     openNewTab("http://member.bilibili.com/v/#!/article");
                   // }
                   // setTimeout(function () { window.location = window.location }, 500);
-                  var notif = new Notification("上传成功！");
+                  console.log('submit success')
+                  var notif = new Notification("提交成功！");
                   this.videos = []
                   ipcRenderer.send('isUploading', false)
                   ipcRenderer.send('hasVideoInQueue', false)
+                  this.formData = {}
                   return true;
                 } else {
                   var notif = new Notification(result.message);
