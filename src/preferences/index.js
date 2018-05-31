@@ -30,29 +30,45 @@ export default new ElectronPreferences({
                         'label': '通用',
                         'fields': [
                             {
-                                'label': 'Placeholder',
-                                'key': 'placeholder',
-                                'type': 'text',
-                                /**
-                                 * Optional text to be displayed beneath the field.
-                                 */
-                                'help': 'some random stuff'
-                            },
-                            {
-                                'label': 'Dummy',
-                                'key': 'dummy',
-                                'type': 'text',
-                                'help': 'some dummy text'
-                            },
-                            {
-                                'label': 'acfun number one',
-                                'key': 'acfun',
+                                'label': '系统',
+                                'key': 'system',
                                 'type': 'checkbox',
                                 'options': [
-                                    { 'label': 'agree', 'value': 'agree' }
+                                    { 'label': '关闭时最小化到系统托盘', 'value': 'minimize' }
                                 ]
                             }
                         ]
+                    }
+                ]
+            }
+        },
+        {
+            'id': 'notification',
+            'label': '通知',
+            'icon': 'bell-53',
+            'form': {
+                'groups': [
+                    {
+                        'label': '通知',
+                        'fields': [{
+                            'label': '提醒',
+                            'key': 'notification',
+                            'type': 'checkbox',
+                            'options': [
+                                {
+                                    'label': '视频未上传完退出时提醒我',
+                                    'value': 'unuploaded'
+                                },
+                                {
+                                    'label': '稿件未提交退出时提醒我',
+                                    'value': 'unsubmitted'
+                                },
+                                {
+                                    'label': '上传完成后提醒我',
+                                    'value': 'postUpload'
+                                },
+                            ]
+                        }]
                     }
                 ]
             }
