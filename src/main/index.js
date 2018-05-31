@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow, session, ipcMain } from 'electron'
+import { app, BrowserWindow, session, ipcMain, Menu } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 import getMenuTemplate from '../menu'
@@ -42,7 +42,8 @@ function createMainWindow() {
       window.focus()
     })
   })
-
+  const menu = Menu.buildFromTemplate(getMenuTemplate(logOut, true))
+  Menu.setApplicationMenu(menu)
   return window
 }
 // fake the headers to member.bilibili.com to fool the server
@@ -116,6 +117,8 @@ function createLoginWindow() {
       }) + '#/login'
     )
   }
+  const menu = Menu.buildFromTemplate(getMenuTemplate(logOut, false))
+  Menu.setApplicationMenu(menu)
   return window
 }
 
@@ -138,7 +141,4 @@ app.on('activate', () => {
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
   login()
-  const { Menu } = require('electron')
-  const menu = Menu.buildFromTemplate(getMenuTemplate(logOut))
-  Menu.setApplicationMenu(menu)
 })
