@@ -4,6 +4,7 @@ import { app, BrowserWindow, session, ipcMain, Menu } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 import getMenuTemplate from '../menu'
+import preferences from '../preferences'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -125,7 +126,8 @@ function createLoginWindow() {
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
   // on macOS it is common for applications to stay open until the user explicitly quits
-  if (process.platform !== 'darwin') {
+  var isMinimizedWhenClosed = preferences.value('general.system').includes('minimize')
+  if (!isMinimizedWhenClosed) {
     app.quit()
   }
 })
