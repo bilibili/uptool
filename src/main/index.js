@@ -98,6 +98,9 @@ function createLoginWindow() {
       webSecurity: false
     }
   });
+  window.on('closed', () => {
+    loginWindow = null
+  })
   if (isDevelopment) {
     window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/#/login`)
     window.webContents.openDevTools()
@@ -127,12 +130,12 @@ app.on('window-all-closed', () => {
   }
 })
 
-// app.on('activate', () => {
-//   // on macOS it is common to re-create a window even after all windows have been closed
-//   if (mainWindow === null) {
-//     mainWindow = createMainWindow()
-//   }
-// })
+app.on('activate', () => {
+  // on macOS it is common to re-create a window even after all windows have been closed
+  if (mainWindow == null && loginWindow == null) {
+    login()
+  }
+})
 
 // create main BrowserWindow when electron is ready
 app.on('ready', () => {
