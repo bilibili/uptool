@@ -68,14 +68,14 @@ function getMenuTemplate(logOut, isLogOutEnabled) {
     ]
 
     if (process.platform === 'darwin') {
-        template[0].unshift({ role: 'about' }, { type: 'separator' })
-        template[0].slice(2, { type: 'separator' },
-        { role: 'services', submenu: [] },
-        { type: 'separator' },
-        { role: 'hide' },
-        { role: 'hideothers' },
-        { role: 'unhide' },
-        { type: 'separator' })
+        template[0].submenu.unshift({ role: 'about' }, { type: 'separator' })
+        template[0].submenu.splice(2, { type: 'separator' },
+            { role: 'services', submenu: [] },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideothers' },
+            { role: 'unhide' },
+            { type: 'separator' })
         // Edit menu
         template[1].submenu.push(
             { type: 'separator' },
