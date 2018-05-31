@@ -111,11 +111,6 @@ function createLoginWindow() {
       }) + '#/login'
     )
   }
-  window.webContents.on('will-navigate', (event, url) => {
-    if (url.includes('https://www.bilibili.com')) {
-      event.preventDefault()
-    }
-  })
 
   // menu, disable logout
   const menu = Menu.buildFromTemplate(getMenuTemplate(logOut, false))
