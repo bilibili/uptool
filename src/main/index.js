@@ -15,7 +15,8 @@ let videoStatus
 
 function createMainWindow() {
   videoStatus = {
-    isUploading: false
+    isUploading: false,
+    hasVideoInQueue: false
   }
 
   const window = new BrowserWindow({
@@ -52,12 +53,25 @@ function createMainWindow() {
       )
       if (choice === 1) {
         e.preventDefault()
-      } else {
-        mainWindow = null
+        return
       }
-    } else {
-      mainWindow = null
     }
+
+    if (alertSetting && alertSetting.includes('unsubmitted') && videoStatus.hasVideoInQueue) {
+      let choice = dialog.showMessageBox(
+        {
+          type: 'question',
+          buttons: ['是', '否'],
+          title: '投稿未提交',
+          message: '投稿未提交，确认退出？'
+        }
+      )
+      if (choice === 1) {
+        e.preventDefault()
+        return
+      }
+    }
+    mainWindow = null
   })
 
   window.webContents.on('devtools-opened', () => {
@@ -91,12 +105,12 @@ ipcMain.on('loggedIn', (event, arg) => {
   mainWindow = createMainWindow()
 })
 
-ipcMain.on('uploadingStarted', (event, arg) => {
-  videoStatus.isUploading = true
+ipcMain.on('isUploading', (event, arg) => {
+  videoStatus.isUploading = arg
 })
 
-ipcMain.on('uploadingFinished', (event, arg) => {
-  videoStatus.isUploading = false
+ipcMain.on('hasVideoInQueue', (event, arg) => {
+  videoStatus.hasVideoInQueue = arg
 })
 
 function logOut() {

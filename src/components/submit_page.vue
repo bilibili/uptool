@@ -261,7 +261,6 @@ export default {
       if (confirm("确认取消上传？")) {
         var file = this.ybup.getFile(fileid);
         this.ybup.removeFile(file);
-        $("#" + fileid).remove();
         file.destroy();
         file.uploaded = false;
 
@@ -269,6 +268,7 @@ export default {
         if (index >= 0) {
           videos.splice(index, 1);
         }
+        this.evaluateVideoStatus()
       }
     },
     submit_cover_and_video: function(req) {
@@ -302,6 +302,24 @@ export default {
           });
         }
       );
+    },
+    evaluateVideoStatus: function() {
+      if (this.videos.length > 0) {
+        ipcRenderer.send('hasVideoInQueue', true)
+        for (var i = 0; i < this.videos.length; i++) {
+          var file = this.videos[i];
+          if (!file.uploaded) {
+            ipcRenderer.send('isUploading', true)
+            break
+          }
+          if (i == this.videos.length - 1) {
+            ipcRenderer.send('isUploading', false)
+          }
+        }
+      } else {
+        ipcRenderer.send('hasVideoInQueue', false)
+        ipcRenderer.send('isUploading', false)
+      }
     },
     submit_video: function(req) {
       const { session } = require("electron").remote;
@@ -422,7 +440,8 @@ export default {
         file.percent = 0;
         file.status = "";
         this.videos.push(file);
-        ipcRenderer.send("uploadingStarted");
+        ipcRenderer.send("isUploading", true);
+        ipcRenderer.send("hasVideoInQueue", true)
       });
 
       this.ybup.bind("FileUploaded", (up, file, info) => {
@@ -434,15 +453,7 @@ export default {
         // }
         new Notification("上传成功", { body: file.name });
         this.is_uploading = false;
-
-        for (var i = 0; i < this.videos.length; i++) {
-          var file = this.videos[i];
-          if (!file.uploaded) {
-            ipcRenderer.send('uploadingStarted')
-          } else {
-            ipcRenderer.send('uploadingFinished')
-          }
-        }
+        this.evaluateVideoStatus()
       });
 
       this.ybup.bind("Error", function(up, err) {
