@@ -343,6 +343,9 @@ export default {
                   // }
                   // setTimeout(function () { window.location = window.location }, 500);
                   var notif = new Notification("上传成功！");
+                  this.videos = []
+                  ipcRenderer.send('isUploading', false)
+                  ipcRenderer.send('hasVideoInQueue', false)
                   return true;
                 } else {
                   var notif = new Notification(result.message);
