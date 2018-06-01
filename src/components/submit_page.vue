@@ -93,9 +93,21 @@
         </div>
 
         <div class="field">
-          <label class="label">标签(逗号分隔)</label>
-          <div class="control">
+          <label class="label">标签</label>
+          <!-- <div class="control">
             <input name="tag" class="input" type="text" placeholder="动作,MAD" v-model="formData.tag">
+          </div> -->
+          <span class="is-size-7 has-text-grey">还可添加 {{10 - formData.tags.length}} 个标签</span>
+          <div class="control">
+            <!-- tag cloud -->
+            <div class="tags">
+              <span class="tag" v-for="tag in formData.tags">
+                {{tag}}
+                <button class="delete is-small" @click="removeTag(tag)"></button>
+              </span>
+            </div>
+            <span class="is-size-7 has-text-grey">{{tagErrorMessage}}</span>
+            <input name="tag" class="input" type="text" placeholder="回车添加" v-model="tagInput" @keyup.enter="addTag">
           </div>
         </div>
 
@@ -114,6 +126,7 @@
 <script>
 import crop_modal from "./crop_modal.vue";
 import { ybuploader } from "../js/ybuploader.full";
+import { Notification } from "electron";
 const { ipcRenderer, remote } = require("electron");
 
 export default {
@@ -123,6 +136,8 @@ export default {
   },
   data() {
     return {
+      tagErrorMessage: "",
+      tagInput: "",
       highlighted: {
         parent: undefined,
         child: undefined
@@ -130,7 +145,9 @@ export default {
       clicked: undefined,
       preData: {},
       typelist: [],
-      formData: {},
+      formData: {
+        tags: []
+      },
       ybup: {},
       videos: [],
       is_paused: false,
@@ -152,6 +169,25 @@ export default {
     }
   },
   methods: {
+    addTag: function() {
+      if (this.tagInput) {
+        if (this.formData.tags.includes(this.tagInput)) {
+          this.tagErrorMessage = "标签已存在";
+        } else if (this.formData.tags.length >= 10) {
+          this.tagErrorMessage = "标签太多了";
+        } else {
+          this.formData.tags.push(this.tagInput);
+          this.tagInput = "";
+          this.tagErrorMessage = "";
+        }
+      }
+    },
+    removeTag: function(tag) {
+      var index = this.formData.tags.indexOf(tag);
+      if (index >= 0) {
+        this.formData.tags.splice(index, 1);
+      }
+    },
     submit: function() {
       var videos = [];
       for (var i = 0; i < this.videos.length; i++) {
@@ -174,6 +210,8 @@ export default {
       for (const [key, value] of Object.entries(this.formData)) {
         if (["copyright", "tid"].indexOf(key) >= 0) {
           req[key] = parseInt(value);
+        } else if (key == "tags") {
+          req["tag"] = value.toString();
         } else {
           req[key] = value;
         }
@@ -440,7 +478,7 @@ export default {
         // if ($('#auto_submit').is(':checked')) {
         //     $("form").submit();
         // }
-        var preferences = ipcRenderer.sendSync('getPreferences');
+        var preferences = ipcRenderer.sendSync("getPreferences");
         var notifSetting = preferences.notification.alert;
         if (notifSetting && notifSetting.includes("postUpload")) {
           new Notification("上传成功", { body: file.name });
