@@ -1,5 +1,6 @@
 {
   "name": "electronic-uptool",
+  "productName": "投稿上传工具",
   "version": "0.1.0",
   "private": true,
   "scripts": {

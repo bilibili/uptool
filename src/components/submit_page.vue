@@ -88,7 +88,7 @@
         <div class="field">
           <label class="label">稿件标题</label>
           <div class="control">
-            <input name="title" class="input" type="text" placeholder="Text input" v-model="formData.title">
+            <input-counter v-model="formData.title" name="title" class="input" type="text" maxlength="80"></input-counter>
           </div>
         </div>
 
@@ -97,7 +97,6 @@
           <!-- <div class="control">
             <input name="tag" class="input" type="text" placeholder="动作,MAD" v-model="formData.tag">
           </div> -->
-          <span class="is-size-7 has-text-grey">还可添加 {{10 - formData.tags.length}} 个标签</span>
           <div class="control">
             <!-- tag cloud -->
             <div class="tags">
@@ -106,8 +105,10 @@
                 <button class="delete is-small" @click="removeTag(tag)"></button>
               </span>
             </div>
+            <span class="is-size-7 has-text-grey">还可添加 {{10 - formData.tags.length}} 个标签</span>
             <span class="is-size-7 has-text-grey">{{tagErrorMessage}}</span>
-            <input name="tag" class="input" type="text" placeholder="回车添加" v-model="tagInput" @keyup.enter="addTag">
+            <input-counter maxlength="20" name="tag" class="input" type="text" placeholder="回车添加" v-model="tagInput" @enter="addTag">
+            </input-counter>
           </div>
         </div>
 
@@ -125,6 +126,7 @@
 
 <script>
 import crop_modal from "./crop_modal.vue";
+import input_counter from "./input_counter";
 import { ybuploader } from "../js/ybuploader.full";
 import { Notification } from "electron";
 const { ipcRenderer, remote } = require("electron");
@@ -132,7 +134,8 @@ const { ipcRenderer, remote } = require("electron");
 export default {
   name: "submit_page",
   components: {
-    "crop-modal": crop_modal
+    "crop-modal": crop_modal,
+    "input-counter": input_counter
   },
   data() {
     return {
