@@ -9,7 +9,7 @@
         :name="name"
         :type="type"
         class="input-instance">
-        <span class="is-size-7 has-text-grey">{{value.length}}/{{maxlength}}</span>
+        <span class="is-size-7 has-text-grey">{{value ? value.length : '0'}}/{{maxlength}}</span>
     </div>
 </template>
 
