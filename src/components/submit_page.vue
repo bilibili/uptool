@@ -44,47 +44,81 @@
       </div>
       <br>
 
-      <form id="form">
+      <div id="form">
         <label class="label">投稿类型</label>
         <div class="field">
           <div class="control">
             <label class="radio">
-              <input name="copyright" value="1" type="radio"> 自制
+              <input name="copyright" value="1" type="radio" v-model="formData.copyright"> 自制
             </label>
             <label class="radio">
-              <input name="copyright" value="2" type="radio"> 转载
+              <input name="copyright" value="2" type="radio" v-model="formData.copyright"> 转载
             </label>
           </div>
-          <div class="control">
+          <!-- <div class="control">
             <div class="select is-rounded">
-              <select name="tid">
+              <select name="tid" v-model="formData.tid">
                 <option v-for="category in categories" :value="category.id">{{category.name}}</option>
               </select>
             </div>
+          </div> -->
+          <div v-for="halftype in halftypelist" class="columns is-gapless">
+            <div v-for="videotype in halftype" class="column">
+              <div class="dropdown" @click="clicked=(clicked == videotype.id)? undefined : videotype.id" :class="{'is-active':videotype.id == clicked}">
+                <div class="dropdown-trigger">
+                  <button class="button dropdown-button" aria-haspopup="true" :aria-controls="videotype.id" :class="{'is-danger': videotype.id == highlighted.parent}">
+                    <span>{{videotype.name}}</span>
+                    <span class="icon is-small">
+                      <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                  </button>
+                </div>
+                <div class="dropdown-menu" :id="videotype.id" role="menu">
+                  <div class="dropdown-content">
+                    <a v-for="subtype in videotype.children" class="dropdown-item" @click="highlighted.parent=subtype.parent; highlighted.child=subtype.id; formData.tid=subtype.id" :class="{'selected-dropdown': highlighted.child == subtype.id}">
+                      {{subtype.name}}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
         <div class="field">
           <label class="label">稿件标题</label>
           <div class="control">
-            <input name="title" class="input" type="text" placeholder="Text input">
+            <input name="title" class="input" type="text" placeholder="Text input" v-model="formData.title">
           </div>
         </div>
 
         <div class="field">
-          <label class="label">标签(逗号分隔)</label>
+          <label class="label">标签</label>
+          <!-- <div class="control">
+            <input name="tag" class="input" type="text" placeholder="动作,MAD" v-model="formData.tag">
+          </div> -->
+          <span class="is-size-7 has-text-grey">还可添加 {{10 - formData.tags.length}} 个标签</span>
           <div class="control">
-            <input name="tag" class="input" type="text" placeholder="如：动作,MAD">
+            <!-- tag cloud -->
+            <div class="tags">
+              <span class="tag" v-for="tag in formData.tags">
+                {{tag}}
+                <button class="delete is-small" @click="removeTag(tag)"></button>
+              </span>
+            </div>
+            <span class="is-size-7 has-text-grey">{{tagErrorMessage}}</span>
+            <input name="tag" class="input" type="text" placeholder="回车添加" v-model="tagInput" @keyup.enter="addTag">
           </div>
         </div>
 
         <div class="field">
           <label class="label">视频简介</label>
           <div class="control">
-            <textarea class="textarea" name="desc" type="text" placeholder="请输入简介"></textarea>
+            <textarea class="textarea" name="desc" type="text" placeholder="请输入简介" v-model="formData.desc"></textarea>
           </div>
         </div>
 
-      </form>
+      </div>
     </div>
   </div>
 </template>
@@ -92,6 +126,8 @@
 <script>
 import crop_modal from "./crop_modal.vue";
 import { ybuploader } from "../js/ybuploader.full";
+import { Notification } from "electron";
+const { ipcRenderer, remote } = require("electron");
 
 export default {
   name: "submit_page",
@@ -100,74 +136,20 @@ export default {
   },
   data() {
     return {
+      tagErrorMessage: "",
+      tagInput: "",
+      highlighted: {
+        parent: undefined,
+        child: undefined
+      },
+      clicked: undefined,
+      preData: {},
+      typelist: [],
+      formData: {
+        tags: []
+      },
       ybup: {},
       videos: [],
-      categories: [
-        { id: "24", name: "动画-MAD·AMV" },
-        { id: "25", name: "动画-MMD·3D" },
-        { id: "47", name: "动画-短片·手书·配音" },
-        { id: "27", name: "动画-综合" },
-        { id: "33", name: "番剧-连载动画" },
-        { id: "32", name: "番剧-完结动画" },
-        { id: "153", name: "番剧-国产动画" },
-        { id: "51", name: "番剧-资讯" },
-        { id: "152", name: "番剧-官方延伸" },
-        { id: "153", name: "国创-国产动画" },
-        { id: "168", name: "国创-国产原创相关" },
-        { id: "169", name: "国创-布袋戏" },
-        { id: "170", name: "国创-资讯" },
-        { id: "28", name: "音乐-原创音乐" },
-        { id: "31", name: "音乐-翻唱" },
-        { id: "30", name: "音乐-VOCALOID·UTAU" },
-        { id: "59", name: "音乐-演奏" },
-        { id: "29", name: "音乐-三次元音乐" },
-        { id: "54", name: "音乐-OP/ED/OST" },
-        { id: "130", name: "音乐-音乐选集" },
-        { id: "20", name: "舞蹈-宅舞" },
-        { id: "154", name: "舞蹈-三次元舞蹈" },
-        { id: "156", name: "舞蹈-舞蹈教程" },
-        { id: "17", name: "游戏-单机联机" },
-        { id: "65", name: "游戏-网游·电竞" },
-        { id: "136", name: "游戏-音游" },
-        { id: "19", name: "游戏-Mugen" },
-        { id: "121", name: "游戏-GMV" },
-        { id: "37", name: "科技-纪录片" },
-        { id: "124", name: "科技-趣味科普人文" },
-        { id: "122", name: "科技-野生技术协会" },
-        { id: "39", name: "科技-演讲• 公开课" },
-        { id: "96", name: "科技-星海" },
-        { id: "95", name: "科技-数码" },
-        { id: "98", name: "科技-机械" },
-        { id: "71", name: "娱乐-综艺" },
-        { id: "137", name: "娱乐-明星" },
-        { id: "131", name: "娱乐-Korea相关" },
-        { id: "22", name: "鬼畜-鬼畜调教" },
-        { id: "26", name: "鬼畜-音MAD" },
-        { id: "126", name: "鬼畜-人力VOCALOID" },
-        { id: "127", name: "鬼畜-教程演示" },
-        { id: "82", name: "电影-电影相关" },
-        { id: "85", name: "电影-短片" },
-        { id: "145", name: "电影-欧美电影" },
-        { id: "146", name: "电影-日本电影" },
-        { id: "147", name: "电影-国产电影" },
-        { id: "83", name: "电影-其他国家" },
-        { id: "15", name: "电视剧-连载剧集" },
-        { id: "34", name: "电视剧-完结剧集" },
-        { id: "128", name: "电视剧-电视剧相关" },
-        { id: "86", name: "电视剧-特摄·布袋" },
-        { id: "157", name: "时尚-美妆" },
-        { id: "158", name: "时尚-服饰" },
-        { id: "164", name: "时尚-健身" },
-        { id: "159", name: "时尚-资讯" },
-        { id: "138", name: "生活-搞笑" },
-        { id: "21", name: "生活-日常" },
-        { id: "76", name: "生活-美食圈" },
-        { id: "75", name: "生活-动物圈" },
-        { id: "161", name: "生活-手工" },
-        { id: "162", name: "生活-绘画" },
-        { id: "163", name: "生活-运动" },
-        { id: "166", name: "广告-广告" }
-      ],
       is_paused: false,
       is_uploading: false,
       showModal: false,
@@ -176,7 +158,36 @@ export default {
       cropper_data: null
     };
   },
+  computed: {
+    halftypelist: function() {
+      if (this.typelist) {
+        var mid = Math.ceil(this.typelist.length / 2);
+        return [this.typelist.slice(0, mid), this.typelist.slice(mid)];
+      } else {
+        return [[], []];
+      }
+    }
+  },
   methods: {
+    addTag: function() {
+      if (this.tagInput) {
+        if (this.formData.tags.includes(this.tagInput)) {
+          this.tagErrorMessage = "标签已存在";
+        } else if (this.formData.tags.length >= 10) {
+          this.tagErrorMessage = "标签太多了";
+        } else {
+          this.formData.tags.push(this.tagInput);
+          this.tagInput = "";
+          this.tagErrorMessage = "";
+        }
+      }
+    },
+    removeTag: function(tag) {
+      var index = this.formData.tags.indexOf(tag);
+      if (index >= 0) {
+        this.formData.tags.splice(index, 1);
+      }
+    },
     submit: function() {
       var videos = [];
       for (var i = 0; i < this.videos.length; i++) {
@@ -193,15 +204,18 @@ export default {
         }
       }
 
-      var formData = $("form").serializeArray();
+      // var formData = $("form").serializeArray();
       var req = { videos };
-      formData.forEach(function(obj) {
-        if (["copyright", "tid"].indexOf(obj.name) >= 0) {
-          req[obj.name] = parseInt(obj.value);
+      // this.formData.forEach(function(obj) {
+      for (const [key, value] of Object.entries(this.formData)) {
+        if (["copyright", "tid"].indexOf(key) >= 0) {
+          req[key] = parseInt(value);
+        } else if (key == "tags") {
+          req["tag"] = value.toString();
         } else {
-          req[obj.name] = obj.value;
+          req[key] = value;
         }
-      });
+      }
 
       if (videos.length == 0) {
         var notif = new Notification("请至少添加一个视频");
@@ -260,7 +274,6 @@ export default {
       if (confirm("确认取消上传？")) {
         var file = this.ybup.getFile(fileid);
         this.ybup.removeFile(file);
-        $("#" + fileid).remove();
         file.destroy();
         file.uploaded = false;
 
@@ -268,6 +281,7 @@ export default {
         if (index >= 0) {
           videos.splice(index, 1);
         }
+        this.evaluateVideoStatus();
       }
     },
     submit_cover_and_video: function(req) {
@@ -302,6 +316,24 @@ export default {
         }
       );
     },
+    evaluateVideoStatus: function() {
+      if (this.videos.length > 0) {
+        ipcRenderer.send("hasVideoInQueue", true);
+        for (var i = 0; i < this.videos.length; i++) {
+          var file = this.videos[i];
+          if (!file.uploaded) {
+            ipcRenderer.send("isUploading", true);
+            break;
+          }
+          if (i == this.videos.length - 1) {
+            ipcRenderer.send("isUploading", false);
+          }
+        }
+      } else {
+        ipcRenderer.send("hasVideoInQueue", false);
+        ipcRenderer.send("isUploading", false);
+      }
+    },
     submit_video: function(req) {
       const { session } = require("electron").remote;
       var csrf;
@@ -323,7 +355,12 @@ export default {
                   //     openNewTab("http://member.bilibili.com/v/#!/article");
                   // }
                   // setTimeout(function () { window.location = window.location }, 500);
-                  var notif = new Notification("上传成功！");
+                  console.log("submit success");
+                  var notif = new Notification("提交成功！");
+                  this.videos = [];
+                  ipcRenderer.send("isUploading", false);
+                  ipcRenderer.send("hasVideoInQueue", false);
+                  this.formData = {};
                   return true;
                 } else {
                   var notif = new Notification(result.message);
@@ -337,6 +374,15 @@ export default {
     }
   },
   created: function() {
+    $.getJSON(
+      "https://member.bilibili.com/x/web/archive/pre?langs=cn",
+      json => {
+        if (json.code == 0) {
+          this.preData = json;
+          this.typelist = json.data.typelist;
+        }
+      }
+    );
     if (window.module) {
       module = window.module;
     }
@@ -421,6 +467,8 @@ export default {
         file.percent = 0;
         file.status = "";
         this.videos.push(file);
+        ipcRenderer.send("isUploading", true);
+        ipcRenderer.send("hasVideoInQueue", true);
       });
 
       this.ybup.bind("FileUploaded", (up, file, info) => {
@@ -430,8 +478,13 @@ export default {
         // if ($('#auto_submit').is(':checked')) {
         //     $("form").submit();
         // }
-        new Notification("上传成功", { body: file.name });
+        var preferences = ipcRenderer.sendSync("getPreferences");
+        var notifSetting = preferences.notification.alert;
+        if (notifSetting && notifSetting.includes("postUpload")) {
+          new Notification("上传成功", { body: file.name });
+        }
         this.is_uploading = false;
+        this.evaluateVideoStatus();
       });
 
       this.ybup.bind("Error", function(up, err) {
@@ -481,24 +534,32 @@ export default {
 </style>
 
 <style scoped>
+.dropdown-button {
+  width: 8vw;
+}
 #control {
   position: sticky;
   top: 0;
   margin-top: 0;
-  z-index: 1;
+  z-index: 5;
   background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0px 0px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
 }
 
 #selectfiles {
   cursor: default;
   border: 0;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .video-name {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+}
+
+.selected-dropdown {
+  background-color: #cecece;
 }
 </style>

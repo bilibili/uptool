@@ -1,16 +1,24 @@
 'use strict'
 
-import { app, BrowserWindow, session, ipcMain, Menu } from 'electron'
+import { app, BrowserWindow, session, ipcMain, Menu, dialog } from 'electron'
 import * as path from 'path'
 import { format as formatUrl } from 'url'
 import getMenuTemplate from '../menu'
+import preferences from '../preferences'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // global reference to mainWindow (necessary to prevent window from being garbage collected)
 let mainWindow
 let loginWindow
+let videoStatus
+
 function createMainWindow() {
+  videoStatus = {
+    isUploading: false,
+    hasVideoInQueue: false
+  }
+
   const window = new BrowserWindow({
     webPreferences: {
       webSecurity: false,
@@ -19,7 +27,7 @@ function createMainWindow() {
   })
 
   if (isDevelopment) {
-    window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
+    window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/#/submit`)
     window.webContents.openDevTools()
   } else {
     window.webContents.openDevTools()
@@ -28,11 +36,41 @@ function createMainWindow() {
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file',
         slashes: true
-      })
+      }) + '#/login'
     )
   }
 
-  window.on('closed', () => {
+  window.on('close', (e) => {
+    var alertSetting = preferences.value('notification.alert')
+    if (alertSetting && alertSetting.includes('unuploaded') && videoStatus.isUploading) {
+      let choice = dialog.showMessageBox(
+        {
+          type: 'question',
+          buttons: ['是', '否'],
+          title: '上传未完成',
+          message: '上传未完成，确认退出？'
+        }
+      )
+      if (choice === 1) {
+        e.preventDefault()
+        return
+      }
+    }
+
+    if (alertSetting && alertSetting.includes('unsubmitted') && videoStatus.hasVideoInQueue) {
+      let choice = dialog.showMessageBox(
+        {
+          type: 'question',
+          buttons: ['是', '否'],
+          title: '投稿未提交',
+          message: '投稿未提交，确认退出？'
+        }
+      )
+      if (choice === 1) {
+        e.preventDefault()
+        return
+      }
+    }
     mainWindow = null
   })
 
@@ -52,7 +90,7 @@ function fakeHeader() {
     urls: [
       'https://member.bilibili.com/x/vu/web/cover/up',
       'https://member.bilibili.com/x/vu/web/add*'
-          ]
+    ]
   }
   session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
     details.requestHeaders['Origin'] = 'https://member.bilibili.com'
@@ -67,13 +105,21 @@ ipcMain.on('loggedIn', (event, arg) => {
   mainWindow = createMainWindow()
 })
 
+ipcMain.on('isUploading', (event, arg) => {
+  videoStatus.isUploading = arg
+})
+
+ipcMain.on('hasVideoInQueue', (event, arg) => {
+  videoStatus.hasVideoInQueue = arg
+})
+
 function logOut() {
   session.defaultSession.clearStorageData(() => {
     mainWindow.close()
     // clearHeader()
     loginWindow = createLoginWindow()
   })
-  
+
 }
 
 function login() {
@@ -125,7 +171,8 @@ function createLoginWindow() {
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
   // on macOS it is common for applications to stay open until the user explicitly quits
-  if (process.platform !== 'darwin') {
+  var isMinimizedWhenClosed = preferences.value('general.system').includes('minimize')
+  if (!isMinimizedWhenClosed) {
     app.quit()
   }
 })
