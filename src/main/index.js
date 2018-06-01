@@ -36,7 +36,7 @@ function createMainWindow() {
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file',
         slashes: true
-      }) + '#/login'
+      }) + '#/submit'
     )
   }
 
