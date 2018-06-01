@@ -30,7 +30,6 @@ function createMainWindow() {
     window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/#/submit`)
     window.webContents.openDevTools()
   } else {
-    window.webContents.openDevTools()
     window.loadURL(
       formatUrl({
         pathname: path.join(__dirname, 'index.html'),
@@ -151,7 +150,6 @@ function createLoginWindow() {
     window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/#/login`)
     window.webContents.openDevTools()
   } else {
-    window.webContents.openDevTools()
     window.loadURL(
       formatUrl({
         pathname: path.join(__dirname, 'index.html'),
