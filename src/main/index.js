@@ -171,7 +171,11 @@ function createLoginWindow() {
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
   // on macOS it is common for applications to stay open until the user explicitly quits
-  var isMinimizedWhenClosed = preferences.value('general.system').includes('minimize')
+  var isMinimizedWhenClosed = false
+  var systemPref = preferences.value('general.system')
+  if (systemPref && systemPref.includes('minimize')) {
+    isMinimizedWhenClosed = true
+  }
   if (!isMinimizedWhenClosed) {
     app.quit()
   }
