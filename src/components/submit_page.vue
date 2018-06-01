@@ -114,7 +114,7 @@
 <script>
 import crop_modal from "./crop_modal.vue";
 import { ybuploader } from "../js/ybuploader.full";
-const { ipcRenderer } = require("electron");
+const { ipcRenderer, remote } = require("electron");
 
 export default {
   name: "submit_page",
@@ -440,7 +440,11 @@ export default {
         // if ($('#auto_submit').is(':checked')) {
         //     $("form").submit();
         // }
-        new Notification("上传成功", { body: file.name });
+        var preferences = ipcRenderer.sendSync('getPreferences');
+        var notifSetting = preferences.notification.alert;
+        if (notifSetting && notifSetting.includes("postUpload")) {
+          new Notification("上传成功", { body: file.name });
+        }
         this.is_uploading = false;
         this.evaluateVideoStatus();
       });
@@ -518,6 +522,6 @@ export default {
 }
 
 .selected-dropdown {
-  background-color: #64b5f6;
+  background-color: #cecece;
 }
 </style>
