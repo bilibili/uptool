@@ -44,7 +44,7 @@
       </div>
       <br>
 
-      <form id="form">
+      <div id="form">
         <label class="label">投稿类型</label>
         <div class="field">
           <div class="control">
@@ -106,7 +106,7 @@
           </div>
         </div>
 
-      </form>
+      </div>
     </div>
   </div>
 </template>
