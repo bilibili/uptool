@@ -98,7 +98,7 @@
         <div class="field">
           <label class="label">稿件标题</label>
           <div class="control">
-            <input-counter v-model="formData.title" name="title" class="input" type="text" maxlength="80"></input-counter>
+            <input-counter placeholder="稿件标题" v-model="formData.title" name="title" class="input" type="text" maxlength="80"></input-counter>
           </div>
         </div>
 
@@ -486,6 +486,7 @@ export default {
         this.videos.push(file);
         ipcRenderer.send("isUploading", true);
         ipcRenderer.send("hasVideoInQueue", true);
+        this.formData.title = file.name;
       });
 
       this.ybup.bind("FileUploaded", (up, file, info) => {
