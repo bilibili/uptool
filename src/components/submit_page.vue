@@ -98,6 +98,7 @@
         </div>
         <div class="field">
           <label class="label">稿件标题</label>
+          {{formData.title}}
           <div class="control">
             <input-counter placeholder="稿件标题" v-model="formData.title" name="title" class="input" type="text" maxlength="80"></input-counter>
           </div>
@@ -159,7 +160,8 @@ export default {
       preData: {},
       typelist: [],
       formData: {
-        tags: []
+        tags: [],
+        title: ''
       },
       ybup: {},
       videos: [],
@@ -372,7 +374,7 @@ export default {
                   var notif = new Notification("提交成功！");
                   console.log(this.formData)
                   // reset form
-                  this.formData= Object.assign({}, {tags: []})
+                  this.formData= Object.assign({}, {tags: [], title: ''})
                   this.clicked = undefined
                   this.highlighted = Object.assign({}, {parent: undefined, child: undefined})
 
