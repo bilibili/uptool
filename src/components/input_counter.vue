@@ -8,6 +8,7 @@
         :maxlength="maxlength"
         :name="name"
         :type="type"
+        :placeholder="placeholder"
         class="input-instance">
         <span class="is-size-7 has-text-grey">{{value ? value.length : '0'}}/{{maxlength}}</span>
     </div>
@@ -20,7 +21,8 @@ export default {
         'maxlength',
         'name',
         'type',
-        'value'
+        'value',
+        'placeholder'
     ],
     data() {
         return {
