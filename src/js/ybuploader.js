@@ -30,22 +30,22 @@ ybuploader.get_upcdns = function(callback){
     var timeout = 500;
     var upcdns = [];
     $.each([{
-        os: "kodo",
-        query:"os=kodo&bucket=bvcupcdnkodobm", 
-        url: "//upload-na0.qbox.me",
-    }, {
-        os: "kodo",
-        query:"os=kodo&bucket=bvcupcdnkodohd", 
-        url: "//upload.qbox.me",
-    }, {
-        os: "kodo",
-        query:"os=kodo&bucket=bvcupcdnkodohb", 
-        url: "//upload-z1.qbox.me",
-    }, {
-        os: "kodo",
-        query:"os=kodo&bucket=bvcupcdnkodohn", 
-        url: "//upload-z2.qbox.me",
-    }, {
+    //     os: "kodo",
+    //     query:"os=kodo&bucket=bvcupcdnkodobm", 
+    //     url: "//upload-na0.qbox.me",
+    // }, {
+    //     os: "kodo",
+    //     query:"os=kodo&bucket=bvcupcdnkodohd", 
+    //     url: "//upload.qbox.me",
+    // }, {
+    //     os: "kodo",
+    //     query:"os=kodo&bucket=bvcupcdnkodohb", 
+    //     url: "//upload-z1.qbox.me",
+    // }, {
+    //     os: "kodo",
+    //     query:"os=kodo&bucket=bvcupcdnkodohn", 
+    //     url: "//upload-z2.qbox.me",
+    // }, {
         os: "upos",
         query:"os=upos&upcdn=ws", 
         url: "//upos-hz-upcdnws.acgvideo.com",
@@ -65,26 +65,26 @@ ybuploader.get_upcdns = function(callback){
         os: "upos",
         query:"os=upos&upcdn=qn", 
         url: "//upos-hz-upcdnqn.acgvideo.com",
-    }, {
-        os: "cos",
-        query:"os=cos&bucket=bvcupcdncoshn", 
-        url: "//bvcupcdncoshn-1252693259-cn-south.acgvideo.com",
-    }, {
-        os: "cos",
-        query:"os=cos&bucket=bvcupcdncoshb", 
-        url: "//bvcupcdncoshb-1252693259-cn-north.acgvideo.com",
-    }, {
-        os: "cos",
-        query:"os=cos&bucket=bvcupcdncoshd", 
-        url: "//bvcupcdncoshd-1252693259-cn-east.acgvideo.com",
-    }, {
-        os: "cos",
-        query:"os=cos&bucket=bvcupcdncosxn", 
-        url: "//bvcupcdncosxn-1252693259-cn-southwest.acgvideo.com",
-    }, {
-        os: "cos",
-        query:"os=cos&bucket=bvcupcdncosxjp", 
-        url: "//bvcupcdncosxjp-1252693259-sg.acgvideo.com",
+    // }, {
+    //     os: "cos",
+    //     query:"os=cos&bucket=bvcupcdncoshn", 
+    //     url: "//bvcupcdncoshn-1252693259-cn-south.acgvideo.com",
+    // }, {
+    //     os: "cos",
+    //     query:"os=cos&bucket=bvcupcdncoshb", 
+    //     url: "//bvcupcdncoshb-1252693259-cn-north.acgvideo.com",
+    // }, {
+    //     os: "cos",
+    //     query:"os=cos&bucket=bvcupcdncoshd", 
+    //     url: "//bvcupcdncoshd-1252693259-cn-east.acgvideo.com",
+    // }, {
+    //     os: "cos",
+    //     query:"os=cos&bucket=bvcupcdncosxn", 
+    //     url: "//bvcupcdncosxn-1252693259-cn-southwest.acgvideo.com",
+    // }, {
+    //     os: "cos",
+    //     query:"os=cos&bucket=bvcupcdncosxjp", 
+    //     url: "//bvcupcdncosxjp-1252693259-sg.acgvideo.com",
     // }, {
     //     os: "bos",
     //     query:"os=bos&bucket=bvcupcdnboshn", 
