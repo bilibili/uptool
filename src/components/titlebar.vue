@@ -21,6 +21,9 @@
                 </figure>
             </div>
             <p class="level-item">
+                {{myInfo.uname}}
+            </p>
+            <p class="level-item">
                 <font-awesome-icon icon="cog" />
             </p>
             <p class="level-item"> | </p>
