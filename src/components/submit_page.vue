@@ -498,8 +498,9 @@ export default {
         //     $("form").submit();
         // }
         var preferences = ipcRenderer.sendSync("getPreferences");
-        var notifSetting = preferences.notification.alert;
-        if (notifSetting && notifSetting.includes("postUpload")) {
+        var notifSetting = preferences.notification;
+        var alertSetting = notifSetting.alert;
+        if (notifSetting && alertSetting && alertSetting.includes("postUpload")) {
           new Notification("上传成功", { body: file.name });
         }
         this.is_uploading = false;
