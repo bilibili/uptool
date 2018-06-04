@@ -1,15 +1,31 @@
 <template>
-    <nav class="navbar is-fixed-top level is-paddingless is-marginless" style=" background:#FF709E; height:40px; color:white;-webkit-app-region:drag;">
+    <nav class="navbar is-fixed-top level is-paddingless is-marginless" style=" background:#FF709E; height:40px; color:white;-webkit-app-region:drag;" @mouseout="isDropdownShown=false">
         <!-- Left side -->
         <div class="level-left">
             <p class="level-item">
             </p>
             <div class="level-item">
-                <figure class="image is-24x24">
-                    <img :src="myInfo.face" class="avatar">
-                </figure>
+            <figure class="image is-24x24">
+                <img :src="myInfo.face" class="avatar">
+            </figure>
             </div>
-            <p class="level-item">
+
+            <div @mouseout="isDropdownShown=false" @mouseover="isDropdownShown=true">
+                <div class="level-item dropdown" :class="{'is-active': isDropdownShown}">
+                    <div class="dropdown-trigger">
+                        <font-awesome-icon icon="angle-down" />
+                    </div>
+                    <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            <a href="#" class="dropdown-item">
+                                登出
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <p class="level-item">
                 {{myInfo.uname}}
             </p>
             <p class="level-item"> | </p>
@@ -40,18 +56,19 @@
 export default {
   name: "titlebar",
   data() {
-      return {
-          preData: {},
-          myInfo: {}
-      }
+    return {
+      preData: {},
+      myInfo: {},
+      isDropdownShown: false
+    };
   },
   created: function() {
-      $.getJSON(
+    $.getJSON(
       "https://member.bilibili.com/x/web/archive/pre?langs=cn",
       json => {
         if (json.code == 0) {
           this.preData = json;
-          this.myInfo = this.preData.data.myinfo
+          this.myInfo = this.preData.data.myinfo;
         }
       }
     );
@@ -61,6 +78,6 @@ export default {
 
 <style scoped>
 .avatar {
-    border-radius: 12px;
+  border-radius: 12px;
 }
 </style>
