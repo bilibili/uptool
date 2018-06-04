@@ -4,8 +4,7 @@
       <nav class="level">
         <div class="level-left">
           <span id="selectfiles" class="button webuploader-container">
-            <font-awesome-icon icon="plus" />
-            新建投稿
+            <font-awesome-icon icon="plus" /> 新建投稿
           </span>
           &nbsp;
           <button id="start" v-show='is_paused && is_uploading' v-on:click="ybup.start(); is_paused=false" class="button is-light"> 继续上传 </button>
@@ -21,13 +20,7 @@
       </nav>
     </div>
 
-    <crop-modal v-if="showModal"
-      @set-cover="image_base64=$event"
-      :src="image_base64"
-      @close-modal="showModal = false"
-      @cropped-cover="cropped_cover=$event"
-      @cropper-data="cropper_data=$event"
-      :cropper_data="cropper_data">
+    <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data">
     </crop-modal>
 
     <div id="content" @click="clicked=undefined">
@@ -161,7 +154,7 @@ export default {
       typelist: [],
       formData: {
         tags: [],
-        title: ''
+        title: ""
       },
       ybup: {},
       videos: [],
@@ -363,7 +356,7 @@ export default {
               contentType: "application/json; charset=utf-8",
               data: JSON.stringify(req),
               dataType: "json",
-              success: (result) => {
+              success: result => {
                 console.log(result);
                 if (result.code == 0) {
                   // if (confirm('成功！前往稿件管理？(需等待大概1分钟才会有)')) {
@@ -372,11 +365,14 @@ export default {
                   // setTimeout(function () { window.location = window.location }, 500);
                   console.log("submit success");
                   var notif = new Notification("提交成功！");
-                  console.log(this.formData)
+                  console.log(this.formData);
                   // reset form
-                  this.formData= Object.assign({}, {tags: [], title: ''})
-                  this.clicked = undefined
-                  this.highlighted = Object.assign({}, {parent: undefined, child: undefined})
+                  this.formData = Object.assign({}, { tags: [], title: "" });
+                  this.clicked = undefined;
+                  this.highlighted = Object.assign(
+                    {},
+                    { parent: undefined, child: undefined }
+                  );
 
                   this.videos = [];
                   ipcRenderer.send("isUploading", false);
@@ -489,7 +485,9 @@ export default {
         this.videos.push(file);
         ipcRenderer.send("isUploading", true);
         ipcRenderer.send("hasVideoInQueue", true);
-        this.formData.title = file.name;
+        if (!this.formData.title) {
+          this.formData.title = file.name;
+        }
       });
 
       this.ybup.bind("FileUploaded", (up, file, info) => {
@@ -556,7 +554,7 @@ export default {
 
 <style scoped>
 .submit-button {
-  background-color: #FF709E;
+  background-color: #ff709e;
   color: white;
 }
 
