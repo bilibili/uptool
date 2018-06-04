@@ -52,7 +52,8 @@
             </a>
           </div>
         </div>
-        <progress class="progress" max="100" :value=video.percent></progress>
+        <progress class="progress is-small" max="100" :value=video.percent></progress>
+        <br>
       </div>
       <br>
 
