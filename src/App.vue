@@ -1,5 +1,6 @@
 <template>
-  <div id="app">
+  <div id="app" class="has-navbar-fixed-top">
+    <titlebar></titlebar>
     <div class="columns is-gapless is-fullheight">
       <div id="sidebar" class="column is-one-quarter">
         <p v-if="this.$route.path !== '/login'">
@@ -17,6 +18,7 @@
 
 <script>
 import sidebar from "./components/sidebar.vue";
+import titlebar from "./components/titlebar.vue"
 
 global.jQuery = require("jquery");
 var $ = global.jQuery;
@@ -25,7 +27,8 @@ window.$ = $;
 export default {
   name: "app",
   components: {
-    sidebar
+    sidebar,
+    titlebar
   }
 };
 </script>
@@ -33,7 +36,8 @@ export default {
 <style scoped>
 .columns {
   overflow: hidden;
-  height: 100vh;
+  /* height: 100vh; */
+  height: calc(100vh - 3.25rem)
 }
 .is-main-content {
   overflow: auto;
@@ -47,3 +51,10 @@ export default {
   margin: 1px;
 }
 </style>
+
+<style>
+.has-navbar-fixed-top {
+  padding-top: 3.25rem;
+}
+</style>
+
