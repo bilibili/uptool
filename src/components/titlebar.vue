@@ -2,10 +2,16 @@
     <nav class="navbar is-fixed-top level is-paddingless is-marginless" style=" background:#FF709E; height:40px; color:white;-webkit-app-region:drag;">
         <!-- Left side -->
         <div class="level-left">
-            <p class="level-item"> </p>
-            <div class="level-item ">
-                Placeholder
+            <p class="level-item">
+            </p>
+            <div class="level-item">
+                <figure class="image is-24x24">
+                    <img :src="myInfo.face" class="avatar">
+                </figure>
             </div>
+            <p class="level-item">
+                {{myInfo.uname}}
+            </p>
             <p class="level-item"> | </p>
             <div class="level-item ">
                 Placeholder
@@ -15,14 +21,6 @@
 
         <!-- Right side -->
         <div class="level-right">
-            <div class="level-item">
-                <figure class="image is-24x24">
-                    <img :src="myInfo.face" class="avatar">
-                </figure>
-            </div>
-            <p class="level-item">
-                {{myInfo.uname}}
-            </p>
             <p class="level-item">
                 <font-awesome-icon icon="cog" />
             </p>
