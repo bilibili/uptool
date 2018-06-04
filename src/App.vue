@@ -53,6 +53,11 @@ export default {
 </style>
 
 <style>
+#sidebar {
+  background: #fcfcfc;
+  border: 1px solid rgb(229,233,239);
+}
+
 .has-navbar-fixed-top {
   padding-top: 3.25rem;
 }

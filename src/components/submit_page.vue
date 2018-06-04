@@ -1,17 +1,22 @@
 <template>
   <div id="submit">
-    <div class="box" id="control">
+    <div id="control">
       <nav class="level">
         <div class="level-left">
-          <span id="selectfiles" class="button webuploader-container">新建投稿</span>
+          <span id="selectfiles" class="button webuploader-container">
+            <font-awesome-icon icon="plus" />
+            新建投稿
+          </span>
           &nbsp;
           <button id="start" v-show='is_paused && is_uploading' v-on:click="ybup.start(); is_paused=false" class="button is-light"> 继续上传 </button>
           <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
         </div>
         <div class="level-right">
-          <button class="button" v-on:click="showModal=true">封面</button>
+          <button class="button" v-on:click="showModal=true">
+            设置封面
+          </button>
           &nbsp;
-          <button v-on:click="submit" class="button is-dark">提交</button>
+          <button v-on:click="submit" class="button submit-button">提交</button>
         </div>
       </nav>
     </div>
@@ -25,7 +30,7 @@
       :cropper_data="cropper_data">
     </crop-modal>
 
-    <div class="box" id="content" @click="clicked=undefined">
+    <div id="content" @click="clicked=undefined">
       <div id="filelist" v-for="video in videos">
         <div class="columns">
           <div class="column">
@@ -546,6 +551,16 @@ export default {
 </style>
 
 <style scoped>
+.submit-button {
+  background-color: #FF709E;
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: rgb(255, 164, 193);
+  color: white;
+}
+
 .dropdown-button {
   width: 8vw;
 }
@@ -557,6 +572,7 @@ export default {
   background-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(5px);
   box-shadow: 0 0px 0px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+  padding: 20px;
 }
 
 #selectfiles {
@@ -573,5 +589,9 @@ export default {
 
 .selected-dropdown {
   background-color: #cecece;
+}
+
+#content {
+  padding: 20px;
 }
 </style>
