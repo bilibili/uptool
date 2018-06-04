@@ -128,7 +128,6 @@
 import crop_modal from "./crop_modal.vue";
 import input_counter from "./input_counter";
 import { ybuploader } from "../js/ybuploader.full";
-import { Notification } from "electron";
 const { ipcRenderer, remote } = require("electron");
 
 export default {
