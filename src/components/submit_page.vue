@@ -18,7 +18,7 @@
 
     <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data"></crop-modal>
 
-    <div class="box" id="content">
+    <div class="box" id="content" @click="clicked=undefined">
       <div id="filelist" v-for="video in videos">
         <div class="columns">
           <div class="column">
@@ -64,7 +64,7 @@
           </div> -->
           <div v-for="halftype in halftypelist" class="columns is-gapless">
             <div v-for="videotype in halftype" class="column">
-              <div class="dropdown" @click="clicked=(clicked == videotype.id)? undefined : videotype.id" :class="{'is-active':videotype.id == clicked}">
+              <div class="dropdown" @click.stop="clicked=(clicked == videotype.id)? undefined : videotype.id" :class="{'is-active':videotype.id == clicked}">
                 <div class="dropdown-trigger">
                   <button class="button dropdown-button" aria-haspopup="true" :aria-controls="videotype.id" :class="{'is-danger': videotype.id == highlighted.parent}">
                     <span>{{videotype.name}}</span>
