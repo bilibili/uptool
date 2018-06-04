@@ -69,7 +69,8 @@
   },
   "build": {
     "directories": {
-      "output": "dist_electron"
+      "output": "dist_electron",
+      "buildResources": "assets"
     },
     "files": [
       "dist/**/*",
