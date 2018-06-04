@@ -350,7 +350,7 @@ export default {
               contentType: "application/json; charset=utf-8",
               data: JSON.stringify(req),
               dataType: "json",
-              success: function(result) {
+              success: (result) => {
                 console.log(result);
                 if (result.code == 0) {
                   // if (confirm('成功！前往稿件管理？(需等待大概1分钟才会有)')) {
@@ -359,10 +359,15 @@ export default {
                   // setTimeout(function () { window.location = window.location }, 500);
                   console.log("submit success");
                   var notif = new Notification("提交成功！");
+                  console.log(this.formData)
+                  // reset form
+                  this.formData= Object.assign({}, {tags: []})
+                  this.clicked = undefined
+                  this.highlighted = Object.assign({}, {parent: undefined, child: undefined})
+
                   this.videos = [];
                   ipcRenderer.send("isUploading", false);
                   ipcRenderer.send("hasVideoInQueue", false);
-                  this.formData = {};
                   return true;
                 } else {
                   var notif = new Notification(result.message);
