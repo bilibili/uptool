@@ -2,7 +2,7 @@
   <div id="app" class="has-navbar-fixed-top">
     <titlebar></titlebar>
     <div class="columns is-gapless is-fullheight">
-      <div id="sidebar" class="column is-one-quarter">
+      <div id="sidebar" class="column is-one-fifth">
         <p v-if="this.$route.path !== '/login'">
           <sidebar></sidebar>
         </p>

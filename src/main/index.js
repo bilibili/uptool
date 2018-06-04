@@ -23,9 +23,10 @@ function createMainWindow() {
     webPreferences: {
       webSecurity: false,
       experimentalFeatures: true,
-      width: 1024,
-      height: 768
-    }
+    },
+    width: 1024,
+    height: 768,
+    frame: false
   })
 
   if (isDevelopment) {

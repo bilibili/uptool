@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar is-fixed-top level is-paddingless is-marginless" style=" background:#FF709E; height:40px; color:white;-webkit-app-region:drag;" @mouseout="isDropdownShown=false">
+    <nav class="navbar is-fixed-top level is-paddingless is-marginless">
         <!-- Left side -->
         <div class="level-left">
             <p class="level-item">
@@ -85,5 +85,11 @@ export default {
 <style scoped>
 .avatar {
   border-radius: 12px;
+}
+
+nav {
+    background:#FF709E;
+    color:white;
+    -webkit-app-region: drag;
 }
 </style>
