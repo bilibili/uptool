@@ -22,7 +22,9 @@ function createMainWindow() {
   const window = new BrowserWindow({
     webPreferences: {
       webSecurity: false,
-      experimentalFeatures: true
+      experimentalFeatures: true,
+      width: 1024,
+      height: 768
     }
   })
 

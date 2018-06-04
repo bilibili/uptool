@@ -16,7 +16,14 @@
       </nav>
     </div>
 
-    <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data"></crop-modal>
+    <crop-modal v-if="showModal"
+      @set-cover="image_base64=$event"
+      :src="image_base64"
+      @close-modal="showModal = false"
+      @cropped-cover="cropped_cover=$event"
+      @cropper-data="cropper_data=$event"
+      :cropper_data="cropper_data">
+    </crop-modal>
 
     <div class="box" id="content" @click="clicked=undefined">
       <div id="filelist" v-for="video in videos">
@@ -55,6 +62,7 @@
               <input name="copyright" value="2" type="radio" v-model="formData.copyright"> 转载
             </label>
           </div>
+          <br>
           <!-- <div class="control">
             <div class="select is-rounded">
               <select name="tid" v-model="formData.tid">
@@ -66,11 +74,8 @@
             <div v-for="videotype in halftype" class="column">
               <div class="dropdown" @click.stop="clicked=(clicked == videotype.id)? undefined : videotype.id" :class="{'is-active':videotype.id == clicked}">
                 <div class="dropdown-trigger">
-                  <button class="button dropdown-button" aria-haspopup="true" :aria-controls="videotype.id" :class="{'is-danger': videotype.id == highlighted.parent}">
-                    <span>{{videotype.name}}</span>
-                    <span class="icon is-small">
-                      <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
+                  <button class="button is-rounded is-small dropdown-button" aria-haspopup="true" :aria-controls="videotype.id" :class="{'is-danger': videotype.id == highlighted.parent}">
+                    {{videotype.name}}
                   </button>
                 </div>
                 <div class="dropdown-menu" :id="videotype.id" role="menu">
