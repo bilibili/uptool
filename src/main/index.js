@@ -90,7 +90,9 @@ function fakeHeader() {
   const filters = {
     urls: [
       'https://member.bilibili.com/x/vu/web/cover/up',
-      'https://member.bilibili.com/x/vu/web/add*'
+      'https://member.bilibili.com/x/vu/web/add*',
+      'https://*.hdslb.com',
+      'http://*.hdslb.com'
     ]
   }
   session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {

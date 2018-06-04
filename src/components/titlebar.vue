@@ -15,9 +15,11 @@
 
         <!-- Right side -->
         <div class="level-right">
-            <p class="level-item">
-                <font-awesome-icon icon="envelope" />
-            </p>
+            <div class="level-item">
+                <figure class="image is-24x24">
+                    <img :src="myInfo.face" class="avatar">
+                </figure>
+            </div>
             <p class="level-item">
                 <font-awesome-icon icon="cog" />
             </p>
@@ -35,6 +37,29 @@
 
 <script>
 export default {
-  name: "titlebar"
+  name: "titlebar",
+  data() {
+      return {
+          preData: {},
+          myInfo: {}
+      }
+  },
+  created: function() {
+      $.getJSON(
+      "https://member.bilibili.com/x/web/archive/pre?langs=cn",
+      json => {
+        if (json.code == 0) {
+          this.preData = json;
+          this.myInfo = this.preData.data.myinfo
+        }
+      }
+    );
+  }
 };
 </script>
+
+<style scoped>
+.avatar {
+    border-radius: 12px;
+}
+</style>
