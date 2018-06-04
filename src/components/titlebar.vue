@@ -17,7 +17,7 @@
                     </div>
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
-                            <a href="#" class="dropdown-item">
+                            <a href="#" class="dropdown-item" @click="logOut">
                                 登出
                             </a>
                         </div>
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+const { ipcRenderer, remote } = require("electron");
 export default {
   name: "titlebar",
   data() {
@@ -72,6 +73,11 @@ export default {
         }
       }
     );
+  },
+  methods: {
+      logOut: function() {
+          ipcRenderer.send("logOut")
+      }
   }
 };
 </script>
