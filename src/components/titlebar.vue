@@ -42,10 +42,10 @@
             </p>
             <p class="level-item"> | </p>
             <p class="level-item">
-                <font-awesome-icon icon="minus" />
+                <font-awesome-icon @click="minimize" icon="minus" />
             </p>
             <p class="level-item">
-                <font-awesome-icon icon="times" />
+                <font-awesome-icon @click="close" icon="times" />
             </p>
             <p class="level-item"> </p>
         </div>
@@ -77,6 +77,12 @@ export default {
   methods: {
       logOut: function() {
           ipcRenderer.send("logOut")
+      },
+      minimize: function() {
+          ipcRenderer.send("win_minimize")
+      },
+      close: function() {
+          ipcRenderer.send("win_hide")
       }
   }
 };

@@ -117,6 +117,15 @@ ipcMain.on('hasVideoInQueue', (event, arg) => {
   videoStatus.hasVideoInQueue = arg
 })
 
+ipcMain.on('win_minimize', (event, arg) => {
+  mainWindow.minimize();
+});
+
+ipcMain.on('win_hide', (event, arg) => {
+  mainWindow.hide();
+});
+
+
 function logOut() {
   session.defaultSession.clearStorageData(() => {
     mainWindow.close()
