@@ -91,8 +91,8 @@ function fakeHeader() {
     urls: [
       'https://member.bilibili.com/x/vu/web/cover/up',
       'https://member.bilibili.com/x/vu/web/add*',
-      'https://*.hdslb.com',
-      'http://*.hdslb.com'
+      'https://*.hdslb.com/bfs/face/*.jpg',
+      'http://*.hdslb.com/bfs/face/*.jpg'
     ]
   }
   session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
