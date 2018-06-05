@@ -19,7 +19,7 @@ export default {
     }
   },
   created() {
-      if (this.$store.getters.getActiveTabs) {
+      if (this.$store.getters.getActiveTabs.length != 0) {
           this.$router.push('/submit/1')
       }
   }
