@@ -4,12 +4,12 @@
     <div class="columns is-gapless is-fullheight">
       <div id="sidebar" class="column is-one-fifth">
         <p v-if="this.$route.path !== '/login'">
-          <sidebar></sidebar>
+          <sidebar />
         </p>
       </div>
       <div class="column is-main-content">
         <keep-alive include="submit_page">
-          <router-view></router-view>
+          <router-view />
         </keep-alive>
       </div>
     </div>
