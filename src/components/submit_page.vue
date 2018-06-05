@@ -62,6 +62,14 @@
             </label>
           </div>
           <br>
+          <div class="field" v-if="formData.copyright==2">
+            <label class="label">稿件来源</label>
+            <div class="control">
+              <input-counter placeholder="如 Github、YouTube 链接" v-model="formData.source" name="title" class="input" type="text" maxlength="200"></input-counter>
+            </div>
+            <br>
+          </div>
+
           <!-- <div class="control">
             <div class="select is-rounded">
               <select name="tid" v-model="formData.tid">
