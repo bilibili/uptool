@@ -73,7 +73,13 @@ function createMainWindow() {
         return
       }
     }
-    mainWindow = null
+
+    if (app.quitting) {
+      mainWindow = null
+    } else {
+      event.preventDefault()
+      mainWindow.hide()
+    }
   })
 
   window.webContents.on('devtools-opened', () => {
@@ -201,6 +207,10 @@ app.on('activate', () => {
   // on macOS it is common to re-create a window even after all windows have been closed
   if (mainWindow == null && loginWindow == null) {
     login()
+  } else if (mainWindow) {
+    mainWindow.show()
+  } else if (loginWindow) {
+    loginWindow.show()
   }
 })
 
