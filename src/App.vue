@@ -61,9 +61,5 @@ export default {
 .has-navbar-fixed-top {
   padding-top: 3.25rem;
 }
-
-titlebar {
-  "-webkit-app-region": drag;
-}
 </style>
 
