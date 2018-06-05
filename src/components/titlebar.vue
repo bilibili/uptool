@@ -39,7 +39,7 @@
             <p class="level-item">
             </p>
             <p class="level-item">
-                <font-awesome-icon icon="cog" />
+                <font-awesome-icon icon="cog" @click="pref"/>
             </p>
             <p class="level-item"> | </p>
             <p class="level-item">
@@ -84,6 +84,9 @@ export default {
     },
     close: function() {
       ipcRenderer.send("win_hide");
+    },
+    pref: function() {
+        ipcRenderer.send('showPref')
     }
   }
 };
