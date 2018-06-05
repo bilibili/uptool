@@ -1,5 +1,10 @@
 <template>
   <div id="submit">
+    {{this.$store.state}}
+    <div v-for="tab in getActiveTabs">
+      {{tab}}
+    </div>
+    <button @click="addTab">add</button>
     <div id="control">
       <nav class="level">
         <div class="level-left">
@@ -140,6 +145,7 @@
 <script>
 import crop_modal from "./crop_modal.vue";
 import input_counter from "./input_counter";
+import submit_page from "./submit_page"
 import { ybuploader } from "../js/ybuploader.full";
 const { ipcRenderer, remote } = require("electron");
 
@@ -183,9 +189,18 @@ export default {
       } else {
         return [[], []];
       }
+    },
+    getActiveTabs() {
+      return this.$store.getters.getActiveTabs
     }
   },
   methods: {
+    addTab: function() {
+      this.$store.commit('addTab', {
+        router: this.$router,
+        template: submit_page
+      })
+    },
     addTag: function() {
       if (this.tagInput) {
         if (this.formData.tags.includes(this.tagInput)) {
