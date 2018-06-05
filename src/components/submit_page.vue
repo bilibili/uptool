@@ -65,7 +65,7 @@
           <div class="field" v-if="formData.copyright==2">
             <label class="label">稿件来源</label>
             <div class="control">
-              <input-counter placeholder="如 Github、YouTube 链接" v-model="formData.source" name="title" class="input" type="text" maxlength="200"></input-counter>
+              <input-counter placeholder="如 Github、YouTube 链接" v-model="referrer" name="title" class="input" type="text" maxlength="200"></input-counter>
             </div>
             <br>
           </div>
@@ -151,6 +151,7 @@ export default {
   },
   data() {
     return {
+      referrer: "",
       tagErrorMessage: "",
       tagInput: "",
       highlighted: {
@@ -231,6 +232,10 @@ export default {
         } else {
           req[key] = value;
         }
+      }
+      
+      if (this.formData['copyright'] == '2') {
+        req["source"] = this.referrer
       }
 
       if (videos.length == 0) {
