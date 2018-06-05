@@ -499,7 +499,8 @@ export default {
         ipcRenderer.send("isUploading", true);
         ipcRenderer.send("hasVideoInQueue", true);
         if (!this.formData.title) {
-          this.formData.title = file.name;
+          // get away extension
+          this.formData.title = file.name.replace(/\.[^/.]+$/, "");
         }
       });
 
