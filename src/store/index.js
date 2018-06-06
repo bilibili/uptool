@@ -16,8 +16,6 @@ const getters = {
 
 const mutations = {
     addTab(state, payload) {
-        // required: router, template
-        // ifRedirect optional
         const router = payload.router
         const template = payload.template
         const ifRedirect = payload.ifRedirect

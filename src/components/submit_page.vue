@@ -1,159 +1,151 @@
 <template>
   <div id="submit">
-    <div class="tabs is-boxed">
-      <ul>
-        <li @click="switchTab(tab.path)" v-for="tab in getActiveTabs" :class="{'is-active': currentPath == tab.path}">
-          <a>
-            <span class="icon is-small">
-              <i class="fas fa-image" aria-hidden="true"></i>
-            </span>
-            <span>{{tab.path}}</span>
-          </a>
-        </li>
-      </ul>
+    {{this.$store.state}}
+    <div v-for="tab in getActiveTabs">
+      {{tab}}
     </div>
-  <button @click="addTab">add</button>
-  <div id="control">
-    <nav class="level">
-      <div class="level-left">
-        <span id="selectfiles" class="button webuploader-container">
-          <font-awesome-icon icon="plus" /> 新建投稿
-        </span>
-        &nbsp;
-        <button id="start" v-show='is_paused && is_uploading' v-on:click="ybup.start(); is_paused=false" class="button is-light"> 继续上传 </button>
-        <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
-      </div>
-      <div class="level-right">
-        <button class="button" v-on:click="showModal=true">
-          设置封面
-        </button>
-        &nbsp;
-        <button v-on:click="submit" class="button submit-button">提交</button>
-      </div>
-    </nav>
-  </div>
-
-  <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data">
-  </crop-modal>
-
-  <div id="content" @click="clicked=undefined">
-    <div id="filelist" v-for="video in videos">
-      <div class="columns">
-        <div class="column">
-          <font-awesome-icon v-show="video.status=='progress'" icon="upload" />
-          <font-awesome-icon v-show="video.status=='error'" icon="exclamation-triangle" />
-          <font-awesome-icon v-show="video.status=='complete'" icon="check-circle" />
+    <button @click="addTab">add</button>
+    <div id="control">
+      <nav class="level">
+        <div class="level-left">
+          <span id="selectfiles" class="button webuploader-container">
+            <font-awesome-icon icon="plus" /> 新建投稿
+          </span>
+          &nbsp;
+          <button id="start" v-show='is_paused && is_uploading' v-on:click="ybup.start(); is_paused=false" class="button is-light"> 继续上传 </button>
+          <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
         </div>
-        <div class="column is-5">
-          <p class="video-name">{{video.name}}</p>
+        <div class="level-right">
+          <button class="button" v-on:click="showModal=true">
+            设置封面
+          </button>
+          &nbsp;
+          <button v-on:click="submit" class="button submit-button">提交</button>
         </div>
-        <div class="column is-5">
-          <span v-show="video.status=='progress'">正在上传</span>
-          <span v-show="video.status=='error'">错误</span>
-          <span v-show="video.status=='complete'">完成</span>
-        </div>
-        <div class="column">
-          <a v-on:click="cancel(video.id, videos)">
-            <font-awesome-icon icon="trash-alt" />
-          </a>
-        </div>
-      </div>
-      <progress class="progress is-small" max="100" :value=video.percent></progress>
-      <br>
+      </nav>
     </div>
-    <br>
 
-    <div id="form">
-      <label class="label">投稿类型</label>
-      <div class="field">
-        <div class="control">
-          <label class="radio">
-            <input name="copyright" value="1" type="radio" v-model="formData.copyright"> 自制
-          </label>
-          <label class="radio">
-            <input name="copyright" value="2" type="radio" v-model="formData.copyright"> 转载
-          </label>
+    <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data">
+    </crop-modal>
+
+    <div id="content" @click="clicked=undefined">
+      <div id="filelist" v-for="video in videos">
+        <div class="columns">
+          <div class="column">
+            <font-awesome-icon v-show="video.status=='progress'" icon="upload" />
+            <font-awesome-icon v-show="video.status=='error'" icon="exclamation-triangle" />
+            <font-awesome-icon v-show="video.status=='complete'" icon="check-circle" />
+          </div>
+          <div class="column is-5">
+            <p class="video-name">{{video.name}}</p>
+          </div>
+          <div class="column is-5">
+            <span v-show="video.status=='progress'">正在上传</span>
+            <span v-show="video.status=='error'">错误</span>
+            <span v-show="video.status=='complete'">完成</span>
+          </div>
+          <div class="column">
+            <a v-on:click="cancel(video.id, videos)">
+              <font-awesome-icon icon="trash-alt" />
+            </a>
+          </div>
         </div>
+        <progress class="progress is-small" max="100" :value=video.percent></progress>
         <br>
-        <div class="field" v-if="formData.copyright==2">
-          <label class="label">稿件来源</label>
+      </div>
+      <br>
+
+      <div id="form">
+        <label class="label">投稿类型</label>
+        <div class="field">
           <div class="control">
-            <input-counter placeholder="如 Github、YouTube 链接" v-model="referrer" name="title" class="input" type="text" maxlength="200"></input-counter>
+            <label class="radio">
+              <input name="copyright" value="1" type="radio" v-model="formData.copyright"> 自制
+            </label>
+            <label class="radio">
+              <input name="copyright" value="2" type="radio" v-model="formData.copyright"> 转载
+            </label>
           </div>
           <br>
-        </div>
+          <div class="field" v-if="formData.copyright==2">
+            <label class="label">稿件来源</label>
+            <div class="control">
+              <input-counter placeholder="如 Github、YouTube 链接" v-model="referrer" name="title" class="input" type="text" maxlength="200"></input-counter>
+            </div>
+            <br>
+          </div>
 
-        <!-- <div class="control">
+          <!-- <div class="control">
             <div class="select is-rounded">
               <select name="tid" v-model="formData.tid">
                 <option v-for="category in categories" :value="category.id">{{category.name}}</option>
               </select>
             </div>
           </div> -->
-        <div v-for="halftype in halftypelist" class="columns is-gapless">
-          <div v-for="videotype in halftype" class="column">
-            <div class="dropdown" @click.stop="clicked=(clicked == videotype.id)? undefined : videotype.id" :class="{'is-active':videotype.id == clicked}">
-              <div class="dropdown-trigger">
-                <button class="button is-rounded is-small dropdown-button" aria-haspopup="true" :aria-controls="videotype.id" :class="{'is-danger': videotype.id == highlighted.parent}">
-                  {{videotype.name}}
-                </button>
-              </div>
-              <div class="dropdown-menu" :id="videotype.id" role="menu">
-                <div class="dropdown-content">
-                  <a v-for="subtype in videotype.children" class="dropdown-item" @click="highlighted.parent=subtype.parent; highlighted.child=subtype.id; formData.tid=subtype.id" :class="{'selected-dropdown': highlighted.child == subtype.id}">
-                    {{subtype.name}}
-                  </a>
+          <div v-for="halftype in halftypelist" class="columns is-gapless">
+            <div v-for="videotype in halftype" class="column">
+              <div class="dropdown" @click.stop="clicked=(clicked == videotype.id)? undefined : videotype.id" :class="{'is-active':videotype.id == clicked}">
+                <div class="dropdown-trigger">
+                  <button class="button is-rounded is-small dropdown-button" aria-haspopup="true" :aria-controls="videotype.id" :class="{'is-danger': videotype.id == highlighted.parent}">
+                    {{videotype.name}}
+                  </button>
+                </div>
+                <div class="dropdown-menu" :id="videotype.id" role="menu">
+                  <div class="dropdown-content">
+                    <a v-for="subtype in videotype.children" class="dropdown-item" @click="highlighted.parent=subtype.parent; highlighted.child=subtype.id; formData.tid=subtype.id" :class="{'selected-dropdown': highlighted.child == subtype.id}">
+                      {{subtype.name}}
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+        </div>
+        <div class="field">
+          <label class="label">稿件标题</label>
+          {{formData.title}}
+          <div class="control">
+            <input-counter placeholder="稿件标题" v-model="formData.title" name="title" class="input" type="text" maxlength="80"></input-counter>
+          </div>
         </div>
 
-      </div>
-      <div class="field">
-        <label class="label">稿件标题</label>
-        {{formData.title}}
-        <div class="control">
-          <input-counter placeholder="稿件标题" v-model="formData.title" name="title" class="input" type="text" maxlength="80"></input-counter>
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">标签</label>
-        <!-- <div class="control">
+        <div class="field">
+          <label class="label">标签</label>
+          <!-- <div class="control">
             <input name="tag" class="input" type="text" placeholder="动作,MAD" v-model="formData.tag">
           </div> -->
-        <div class="control">
-          <!-- tag cloud -->
-          <div class="tags">
-            <span class="tag" v-for="tag in formData.tags">
-              {{tag}}
-              <button class="delete is-small" @click="removeTag(tag)"></button>
-            </span>
+          <div class="control">
+            <!-- tag cloud -->
+            <div class="tags">
+              <span class="tag" v-for="tag in formData.tags">
+                {{tag}}
+                <button class="delete is-small" @click="removeTag(tag)"></button>
+              </span>
+            </div>
+            <span class="is-size-7 has-text-grey">还可添加 {{10 - formData.tags.length}} 个标签</span>
+            <span class="is-size-7 has-text-grey">{{tagErrorMessage}}</span>
+            <input-counter maxlength="20" name="tag" class="input" type="text" placeholder="回车添加" v-model="tagInput" @enter="addTag">
+            </input-counter>
           </div>
-          <span class="is-size-7 has-text-grey">还可添加 {{10 - formData.tags.length}} 个标签</span>
-          <span class="is-size-7 has-text-grey">{{tagErrorMessage}}</span>
-          <input-counter maxlength="20" name="tag" class="input" type="text" placeholder="回车添加" v-model="tagInput" @enter="addTag">
-          </input-counter>
         </div>
-      </div>
 
-      <div class="field">
-        <label class="label">视频简介</label>
-        <div class="control">
-          <textarea class="textarea" name="desc" type="text" placeholder="请输入简介" v-model="formData.desc"></textarea>
+        <div class="field">
+          <label class="label">视频简介</label>
+          <div class="control">
+            <textarea class="textarea" name="desc" type="text" placeholder="请输入简介" v-model="formData.desc"></textarea>
+          </div>
         </div>
-      </div>
 
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
 <script>
 import crop_modal from "./crop_modal.vue";
 import input_counter from "./input_counter";
-import submit_page from "./submit_page";
+import submit_page from "./submit_page"
 import { ybuploader } from "../js/ybuploader.full";
 const { ipcRenderer, remote } = require("electron");
 
@@ -199,21 +191,15 @@ export default {
       }
     },
     getActiveTabs() {
-      return this.$store.getters.getActiveTabs;
-    },
-    currentPath() {
-      return this.$route.path;
+      return this.$store.getters.getActiveTabs
     }
   },
   methods: {
-    switchTab(path) {
-      this.$router.push(path)
-    },
     addTab: function() {
-      this.$store.commit("addTab", {
+      this.$store.commit('addTab', {
         router: this.$router,
         template: submit_page
-      });
+      })
     },
     addTag: function() {
       if (this.tagInput) {
@@ -262,9 +248,9 @@ export default {
           req[key] = value;
         }
       }
-
-      if (this.formData["copyright"] == "2") {
-        req["source"] = this.referrer;
+      
+      if (this.formData['copyright'] == '2') {
+        req["source"] = this.referrer
       }
 
       if (videos.length == 0) {
@@ -543,11 +529,7 @@ export default {
         var preferences = ipcRenderer.sendSync("getPreferences");
         var notifSetting = preferences.notification;
         var alertSetting = notifSetting.alert;
-        if (
-          notifSetting &&
-          alertSetting &&
-          alertSetting.includes("postUpload")
-        ) {
+        if (notifSetting && alertSetting && alertSetting.includes("postUpload")) {
           new Notification("上传成功", { body: file.name });
         }
         this.is_uploading = false;
