@@ -1,6 +1,13 @@
 <template>
-  <iframe src='https://passport.bilibili.com/ajax/miniLogin/minilogin' disablewebsecurity>
+  <div>
+  <font-awesome-icon v-show="isLoading" icon="spinner" class="center"/>
+  <iframe
+    src='https://passport.bilibili.com/ajax/miniLogin/minilogin'
+    disablewebsecurity
+    v-show="!isLoading"
+  >
   </iframe>
+  </div>
 </template>
 
 <script>
@@ -8,6 +15,11 @@ const { ipcRenderer, remote } = require("electron");
 let win = remote.getCurrentWindow();
 export default {
   name: "login",
+  data() {
+    return {
+      isLoading: true
+    }
+  },
   mounted: function() {
     function resize() {
       // need to add the margins, a little bit smaller to make it looks elegant
@@ -27,7 +39,8 @@ export default {
       console.log(width, height);
       win.setContentSize(width, height, true);
     }
-    $("iframe").load(function() {
+    $("iframe").load(() => {
+      this.isLoading = false
       // hack the css
       $("iframe").css;
       $("iframe")
@@ -92,5 +105,11 @@ iframe {
   width: 100%;
   height: 100%;
   z-index: 99999;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <div id="app" class="has-navbar-fixed-top">
-    <titlebar></titlebar>
+    <titlebar v-if="!isLoginScreen" />
     <div class="columns is-gapless is-fullheight">
-      <div id="sidebar" class="column is-one-fifth">
-        <p v-if="this.$route.path !== '/login'">
+      <div id="sidebar" class="column is-one-fifth" v-if="!isLoginScreen">
+        <p>
           <sidebar />
         </p>
       </div>
@@ -29,6 +29,11 @@ export default {
   components: {
     sidebar,
     titlebar
+  },
+  computed: {
+    isLoginScreen() {
+      return this.$route.path == '/login'
+    }
   }
 };
 </script>
