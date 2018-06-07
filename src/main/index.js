@@ -99,7 +99,8 @@ function fakeHeader() {
       'https://member.bilibili.com/x/vu/web/cover/up',
       'https://member.bilibili.com/x/vu/web/add*',
       'https://*.hdslb.com/bfs/face/*.jpg',
-      'http://*.hdslb.com/bfs/face/*.jpg'
+      'http://*.hdslb.com/bfs/face/*.jpg',
+      'https://member.bilibili.com/x/web/archive/pre*'
     ]
   }
   session.defaultSession.webRequest.onBeforeSendHeaders(filters, (details, callback) => {
