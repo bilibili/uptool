@@ -74,12 +74,15 @@ function createMainWindow() {
       }
     }
 
-    if (app.quitting) {
-      mainWindow = null
-    } else {
-      event.preventDefault()
-      mainWindow.hide()
-    }
+    // if (app.quitting) {
+    //   console.log('quitting')
+    //   mainWindow = null
+    //   app.quit()
+    // } else {
+    //   console.log('hide')
+    //   e.preventDefault()
+    //   mainWindow.hide()
+    // }
   })
 
   window.webContents.on('devtools-opened', () => {
@@ -129,7 +132,8 @@ ipcMain.on('win_minimize', (event, arg) => {
 });
 
 ipcMain.on('win_hide', (event, arg) => {
-  mainWindow.hide();
+  mainWindow.hide()
+  close()
 });
 
 
@@ -186,10 +190,7 @@ function createLoginWindow() {
   return window
 }
 
-
-// quit application when all windows are closed
-app.on('window-all-closed', () => {
-  // on macOS it is common for applications to stay open until the user explicitly quits
+function close() {
   var isMinimizedWhenClosed = false
   var systemPref = preferences.value('general.system')
   if (systemPref && systemPref.includes('minimize')) {
@@ -198,6 +199,12 @@ app.on('window-all-closed', () => {
   if (!isMinimizedWhenClosed) {
     app.quit()
   }
+}
+
+// quit application when all windows are closed
+app.on('window-all-closed', () => {
+  // on macOS it is common for applications to stay open until the user explicitly quits
+  close()
 })
 
 ipcMain.on('logOut', () => {
