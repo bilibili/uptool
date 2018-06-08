@@ -141,7 +141,9 @@
 import crop_modal from "./crop_modal.vue";
 import input_counter from "./input_counter";
 import { ybuploader } from "../js/ybuploader.full";
+var fs = require('fs')
 const { ipcRenderer, remote } = require("electron");
+const app = remote.app
 
 export default {
   name: "submit_page",
@@ -186,6 +188,30 @@ export default {
     }
   },
   methods: {
+    cropCover: function(path) {
+      var filePath = path;
+      var ffmpeg_static = require("ffmpeg-static");
+      var ffmpeg = require("fluent-ffmpeg");
+      ffmpeg.setFfmpegPath(ffmpeg_static.path);
+      ffmpeg()
+        .input(filePath)
+        .setStartTime("00:00:00")
+        .frames(1)
+        .save(app.getPath("temp") + "output.jpg")
+        .on("error", function(err) {
+          console.log("an error happened: " + err.message);
+        })
+        .on("end", () => {
+          console.log("file has been converted succesfully");
+          fs.readFile(app.getPath("temp") + "output.jpg", (err, data)=> {
+            var img_str = 'data:image/png;base64,' + Buffer(data).toString('base64')
+            this.$store.commit('addCover', img_str)
+          })
+        })
+        .on("progress", function(progress) {
+          console.log("Processing: " + progress.percent + "% done");
+        });
+    },
     addTag: function() {
       if (this.tagInput) {
         if (this.formData.tags.includes(this.tagInput)) {
@@ -234,8 +260,8 @@ export default {
         }
       }
       
-      if (this.formData['copyright'] == '2') {
-        req["source"] = this.referrer
+      if (this.formData["copyright"] == "2") {
+        req["source"] = this.referrer;
       }
 
       if (videos.length == 0) {
@@ -502,6 +528,7 @@ export default {
           // get away extension
           this.formData.title = file.name.replace(/\.[^/.]+$/, "");
         }
+        this.cropCover(file.source.source.path)
       });
 
       this.ybup.bind("FileUploaded", (up, file, info) => {
@@ -514,7 +541,11 @@ export default {
         var preferences = ipcRenderer.sendSync("getPreferences");
         var notifSetting = preferences.notification;
         var alertSetting = notifSetting.alert;
-        if (notifSetting && alertSetting && alertSetting.includes("postUpload")) {
+        if (
+          notifSetting &&
+          alertSetting &&
+          alertSetting.includes("postUpload")
+        ) {
           new Notification("上传成功", { body: file.name });
         }
         this.is_uploading = false;

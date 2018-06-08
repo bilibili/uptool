@@ -4,12 +4,17 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
+    preCroppedCovers: []
 }
 
 const getters = {
 }
 
 const mutations = {
+    addCover(state, cover) {
+        console.log(cover)
+        state.preCroppedCovers.push(cover)
+    }
 }
 export default new Vuex.Store({
     state,
