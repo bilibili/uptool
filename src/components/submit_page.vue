@@ -20,8 +20,16 @@
       </nav>
     </div>
 
-    <crop-modal v-if="showModal" @set-cover="image_base64=$event" :src="image_base64" @close-modal="showModal = false" @cropped-cover="cropped_cover=$event" @cropper-data="cropper_data=$event" :cropper_data="cropper_data">
-    </crop-modal>
+    <crop-modal
+      v-if="showModal"
+      @set-cover="image_base64=$event"
+      :src="image_base64"
+      @close-modal="showModal = false"
+      @cropped-cover="cropped_cover=$event"
+      @cropper-data="cropper_data=$event"
+      :cropper_data="cropper_data"
+      :videos="videos"
+    ></crop-modal>
 
     <div id="content" @click="clicked=undefined">
       <div id="filelist" v-for="video in videos">
@@ -141,9 +149,13 @@
 import crop_modal from "./crop_modal.vue";
 import input_counter from "./input_counter";
 import { ybuploader } from "../js/ybuploader.full";
-var fs = require('fs')
+var fs = require("fs");
+var path = require("path");
+var ffmpeg_static = require("ffmpeg-static");
+var ffmpeg = require("fluent-ffmpeg");
+ffmpeg.setFfmpegPath(ffmpeg_static.path);
 const { ipcRenderer, remote } = require("electron");
-const app = remote.app
+const app = remote.app;
 
 export default {
   name: "submit_page",
@@ -188,29 +200,57 @@ export default {
     }
   },
   methods: {
-    cropCover: function(path) {
-      var filePath = path;
-      var ffmpeg_static = require("ffmpeg-static");
-      var ffmpeg = require("fluent-ffmpeg");
-      ffmpeg.setFfmpegPath(ffmpeg_static.path);
-      ffmpeg()
-        .input(filePath)
-        .setStartTime("00:00:00")
-        .frames(1)
-        .save(app.getPath("temp") + "output.jpg")
-        .on("error", function(err) {
-          console.log("an error happened: " + err.message);
-        })
-        .on("end", () => {
-          console.log("file has been converted succesfully");
-          fs.readFile(app.getPath("temp") + "output.jpg", (err, data)=> {
-            var img_str = 'data:image/png;base64,' + Buffer(data).toString('base64')
-            this.$store.commit('addCover', img_str)
+    cropCover: function(videoFilePath, videoName) {
+      var saveFolder = path.join(app.getPath("temp"), videoName);
+      console.log(saveFolder);
+      // check if saveFolder exists
+      fs.stat(saveFolder, (err, stats) => {
+        if (err) {
+          // saveFolder doesn't exist
+          fs.mkdir(saveFolder);
+        } else if (!stats.isDirectory()) {
+          fs.unlinkSync(saveFolder);
+          fs.mkdirSync(saveFolder);
+        }
+        ffmpeg()
+          .input(videoFilePath)
+          // .setStartTime("00:00:00")
+          // .frames(1)
+          .duration(300)
+          .fps("1/100")
+          .save(path.join(saveFolder, "output%d.jpg"))
+          .on("error", function(err) {
+            console.log("an error happened: " + err.message);
           })
-        })
-        .on("progress", function(progress) {
-          console.log("Processing: " + progress.percent + "% done");
-        });
+          .on("end", () => {
+            console.log("file has been converted succesfully");
+            // fs.readFile(
+            //   path.join(path.join(saveFolder, 'output.jpg')),
+            //   (err, data) => {
+            //     var img_str =
+            //       "data:image/jpg;base64," + Buffer(data).toString("base64");
+            //     this.$store.commit("addCover", img_str);
+            //   }
+            // );
+            // loop the output folder
+            fs.readdir(saveFolder, (err, files) => {
+              if (err) {
+                console.log("failed to read from folder");
+              } else {
+                files.forEach(file => {
+                  var fullFilePath = path.join(saveFolder, file);
+                  fs.readFile(fullFilePath, (err, data) => {
+                    var img_str = "data:image/jpg;base64," + Buffer(data).toString("base64");
+                    this.$store.commit("addCover", img_str);
+                  });
+                });
+              }
+            });
+          })
+          .on("progress", function(progress) {
+            console.log("Processing: " + progress.percent + "% done");
+          });
+      });
     },
     addTag: function() {
       if (this.tagInput) {
@@ -259,7 +299,7 @@ export default {
           req[key] = value;
         }
       }
-      
+
       if (this.formData["copyright"] == "2") {
         req["source"] = this.referrer;
       }
@@ -528,7 +568,7 @@ export default {
           // get away extension
           this.formData.title = file.name.replace(/\.[^/.]+$/, "");
         }
-        this.cropCover(file.source.source.path)
+        this.cropCover(file.source.source.path, file.name);
       });
 
       this.ybup.bind("FileUploaded", (up, file, info) => {

@@ -12,7 +12,6 @@ const getters = {
 
 const mutations = {
     addCover(state, cover) {
-        console.log(cover)
         state.preCroppedCovers.push(cover)
     }
 }

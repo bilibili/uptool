@@ -10,7 +10,11 @@
         <!-- Content ... -->
         <input id="cover-input" v-on:change="load" type='file'>
         <img id="cropper" :src="image_base64" style="max-width: 100%; max-height: calc(100vh - 500px);">
-        <div class="level">
+        <div class="level box" v-if="videos.length != 0">
+          <div v-if="preCroppedCovers.length==0">
+            <!-- no precropped images, display a loading badage-->
+            <font-awesome-icon icon="spinner" />
+          </div> 
           <div v-for="img in preCroppedCovers" class="level-item">
             <img :src="img" class="image is-64x64" @click="setImage(img)" />
           </div>
@@ -84,7 +88,7 @@ export default {
       this.cropper.replace(this.image_base64)
     }
   },
-  props: ["src", "cropper_data"],
+  props: ["src", "cropper_data", "videos"],
   data() {
     return {
       image_base64: this.src,
