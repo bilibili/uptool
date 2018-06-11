@@ -23,7 +23,6 @@
 
     <crop-modal
       v-if="showModal"
-      :src="image_base64"
       @close-modal="showModal = false"
       :videos="videos"
     ></crop-modal>
@@ -681,7 +680,7 @@ export default {
 }
 
 #submit {
-  background-image: url(https://i.loli.net/2018/06/11/5b1df966a2b57.jpg);
+  /* background-image: url(https://i.loli.net/2018/06/11/5b1df966a2b57.jpg); */
   background-color: transparent;
   background-size: cover;
 }
