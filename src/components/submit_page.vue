@@ -184,11 +184,12 @@ export default {
       is_paused: false,
       is_uploading: false,
       showModal: false,
-      cropped_cover: "",
-      cropper_data: null
     };
   },
   computed: {
+    cropped_cover() {
+      return this.$store.state.croppedCover;
+    },
     image_base64() {
       return this.$store.state.cover
     },
