@@ -2,12 +2,11 @@
     <nav class="navbar is-fixed-top level is-paddingless is-marginless">
         <!-- Left side -->
         <div class="level-left">
-            <p class="level-item">
-            </p>
-            <!-- <svg :src="logoSrc" class="level-item logo" /> -->
-            <img :src="logoSrc" class="logo"/>
-            <!-- separator -->
-            <p class="level-item"> | </p>
+            <!-- place holder, make some space on the left end -->
+            <p class="level-item"></p>
+            <traffic-light class="level-item"/>
+            <!-- logo goes here, vector ypa -->
+            <img :src="logoSrc" class="logo level-item"/>
             <p class="level-item">
                 恭喜快手喜提 AcFUN
             </p>
@@ -57,6 +56,7 @@
 <script>
 var path = require("path");
 import { format as formatUrl } from "url";
+import traffic_light from './traffic_light.vue'
 const { ipcRenderer, remote } = require("electron");
 export default {
   name: "titlebar",
@@ -101,6 +101,9 @@ export default {
     pref: function() {
       ipcRenderer.send("showPref");
     }
+  },
+  components: {
+    'traffic-light': traffic_light
   }
 };
 </script>
