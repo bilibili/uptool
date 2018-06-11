@@ -220,10 +220,10 @@ export default {
         }
         ffmpeg()
           .input(videoFilePath)
-          // .setStartTime("00:00:00")
-          // .frames(1)
-          .duration(300)
-          .fps("1/100")
+          .setStartTime("00:00:00")
+          .frames(1)
+          // .duration(300)
+          // .fps("1/100")
           .save(path.join(saveFolder, "output%d.jpg"))
           .on("error", function(err) {
             console.log("an error happened: " + err.message);
