@@ -4,7 +4,7 @@
     <div class="level-left">
       <!-- place holder, make some space on the left end -->
       <p class="level-item"></p>
-      <traffic-light v-if="isMacControls" class="level-item" />
+      <traffic-light v-if="isMacControls" class="level-item nodrag" />
       <!-- logo goes here, vector ypa -->
       <img :src="logoSrc" class="logo level-item" />
       <p class="level-item">
@@ -65,7 +65,8 @@ export default {
     },
     isMacControls() {
       var preferences = ipcRenderer.sendSync("getPreferences");
-      if (preferences.appearance.controlStyle == "mac") {
+      var appearancePref = preferences.appearance;
+      if (appearancePref && appearancePref.controlStyle == "mac") {
         return true
       } else {
         return false
