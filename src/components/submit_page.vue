@@ -597,10 +597,6 @@ export default {
       });
 
       this.ybup.bind("BeforeUpload", function(up, file) {
-        console.log("BeforeUpload");
-        console.log("bili_filename: " + file.bili_filename);
-        console.log($("#" + file.id));
-        console.log($("#" + file.id + ">.bili_filename"));
         $("#" + file.id + ">.bili_filename").html(file.bili_filename);
       });
       this.ybup.init();
