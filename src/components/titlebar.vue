@@ -4,7 +4,8 @@
         <div class="level-left">
             <p class="level-item">
             </p>
-            <img src="https://cdn.onlinewebfonts.com/svg/img_415695.png" class="level-item logo" />
+            <!-- <svg :src="logoSrc" class="level-item logo" /> -->
+            <img :src="logoSrc" class="logo"/>
             <!-- separator -->
             <p class="level-item"> | </p>
             <p class="level-item">
@@ -39,7 +40,7 @@
             <p class="level-item">
             </p>
             <p class="level-item">
-                <font-awesome-icon icon="cog" class="nodrag" @click="pref"/>
+                <font-awesome-icon icon="cog" class="nodrag" @click="pref" />
             </p>
             <p class="level-item"> | </p>
             <p class="level-item">
@@ -54,9 +55,20 @@
 </template>
 
 <script>
+var path = require("path");
+import { format as formatUrl } from "url";
 const { ipcRenderer, remote } = require("electron");
 export default {
   name: "titlebar",
+  computed: {
+    logoSrc() {
+      return formatUrl({
+        pathname: path.join(__static, "logo.svg"),
+        protocol: "file",
+        slashes: true
+      });
+    }
+  },
   data() {
     return {
       preData: {},
@@ -80,14 +92,14 @@ export default {
       ipcRenderer.send("logOut");
     },
     minimize: function() {
-        console.log('clicked')
+      console.log("clicked");
       ipcRenderer.send("win_minimize");
     },
     close: function() {
       ipcRenderer.send("win_hide");
     },
     pref: function() {
-        ipcRenderer.send('showPref')
+      ipcRenderer.send("showPref");
     }
   }
 };
@@ -95,7 +107,7 @@ export default {
 
 <style scoped>
 .logo {
-    height: 30px;
+  height: 50px;
 }
 
 .avatar {
@@ -109,6 +121,6 @@ nav {
 }
 
 .nodrag {
-    -webkit-app-region: no-drag;
+  -webkit-app-region: no-drag;
 }
 </style>
