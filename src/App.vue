@@ -58,6 +58,10 @@ export default {
 </style>
 
 <style>
+.is-main-content {
+  overflow-x: hidden !important;
+}
+
 #sidebar {
   background: #fcfcfc;
   border: 1px solid rgb(229,233,239);
