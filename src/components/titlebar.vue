@@ -24,12 +24,12 @@
                 <!-- arrow down -->
                 <div class="level-item dropdown" :class="{'is-active': isDropdownShown}">
                     <div class="dropdown-trigger">
-                        <font-awesome-icon icon="angle-down" />
+                        <font-awesome-icon class="nodrag" icon="angle-down" />
                     </div>
                     <!-- dropdown -->
                     <div class="dropdown-menu" id="dropdown-menu" role="menu">
                         <div class="dropdown-content">
-                            <a href="#" class="dropdown-item" @click="logOut">
+                            <a href="#" class="nodrag dropdown-item" @click="logOut">
                                 登出
                             </a>
                         </div>
@@ -39,14 +39,14 @@
             <p class="level-item">
             </p>
             <p class="level-item">
-                <font-awesome-icon icon="cog" @click="pref"/>
+                <font-awesome-icon icon="cog" class="nodrag" @click="pref"/>
             </p>
             <p class="level-item"> | </p>
             <p class="level-item">
-                <font-awesome-icon @click="minimize" icon="minus" />
+                <font-awesome-icon class="nodrag" @click="minimize" icon="minus" />
             </p>
             <p class="level-item">
-                <font-awesome-icon @click="close" icon="times" />
+                <font-awesome-icon class="nodrag" @click="close" icon="times" />
             </p>
             <p class="level-item"> </p>
         </div>
@@ -80,6 +80,7 @@ export default {
       ipcRenderer.send("logOut");
     },
     minimize: function() {
+        console.log('clicked')
       ipcRenderer.send("win_minimize");
     },
     close: function() {
@@ -105,5 +106,9 @@ nav {
   background: #ff709e;
   color: white;
   -webkit-app-region: drag;
+}
+
+.nodrag {
+    -webkit-app-region: no-drag;
 }
 </style>
