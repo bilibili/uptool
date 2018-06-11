@@ -42,12 +42,7 @@
                 <font-awesome-icon icon="cog" class="nodrag" @click="pref" />
             </p>
             <p class="level-item"> | </p>
-            <p class="level-item">
-                <font-awesome-icon class="nodrag" @click="minimize" icon="minus" />
-            </p>
-            <p class="level-item">
-                <font-awesome-icon class="nodrag" @click="close" icon="times" />
-            </p>
+            <win-controls class="level-item"/>
             <p class="level-item"> </p>
         </div>
     </nav>
@@ -57,6 +52,7 @@
 var path = require("path");
 import { format as formatUrl } from "url";
 import traffic_light from './traffic_light.vue'
+import win_controls from './win_controls'
 const { ipcRenderer, remote } = require("electron");
 export default {
   name: "titlebar",
@@ -91,19 +87,13 @@ export default {
     logOut: function() {
       ipcRenderer.send("logOut");
     },
-    minimize: function() {
-      console.log("clicked");
-      ipcRenderer.send("win_minimize");
-    },
-    close: function() {
-      ipcRenderer.send("win_hide");
-    },
     pref: function() {
       ipcRenderer.send("showPref");
     }
   },
   components: {
-    'traffic-light': traffic_light
+    'traffic-light': traffic_light,
+    'win-controls': win_controls
   }
 };
 </script>
@@ -122,7 +112,9 @@ nav {
   color: white;
   -webkit-app-region: drag;
 }
+</style>
 
+<style>
 .nodrag {
   -webkit-app-region: no-drag;
 }
