@@ -1,5 +1,5 @@
 <template>
-    <div class="focus">
+    <div :class="{focus: isFocused}">
         <div class="traffic-lights">
             <button class="traffic-light traffic-light-close" id="close"></button>
             <button class="traffic-light traffic-light-minimize" id="minimize"></button>
@@ -9,8 +9,25 @@
 </template>
 
 <script>
+const { remote } = require("electron");
+let win = remote.getCurrentWindow();
 export default {
-  name: "traffic-light"
+  name: "traffic-light",
+  data() {
+    return {
+      isFocused: true
+    };
+  },
+  mounted() {
+    win.on("focus", () => {
+      console.log("focus");
+      this.isFocused = true;
+    });
+    win.on("blur", () => {
+      console.log("blur");
+      this.isFocused = false;
+    });
+  }
 };
 </script>
 
