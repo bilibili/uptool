@@ -8,7 +8,7 @@
           </span>
           &nbsp;
           <button id="start" v-show='is_paused && is_uploading' v-on:click="ybup.start(); is_paused=false" class="button is-light"> 继续上传 </button>
-          <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="ybup.stop(); is_paused=true" class="button is-light"> 暂停上传 </button>
+          <button id="stop" :disabled='!is_uploading' v-show='!is_paused' v-on:click="pause" class="button is-light"> 暂停上传 </button>
         </div>
         <div class="level-right">
           <button class="button" v-on:click="showModal=true">
@@ -35,6 +35,7 @@
       <div id="filelist" v-for="video in videos">
         <div class="columns">
           <div class="column">
+            <font-awesome-icon v-show="is_paused" icon="pause" />
             <font-awesome-icon v-show="video.status=='progress'" icon="upload" />
             <font-awesome-icon v-show="video.status=='error'" icon="exclamation-triangle" />
             <font-awesome-icon v-show="video.status=='complete'" icon="check-circle" />
@@ -43,6 +44,7 @@
             <p class="video-name">{{video.name}}</p>
           </div>
           <div class="column is-5">
+            <span v-show="is_paused">暂停</span>
             <span v-show="video.status=='progress'">正在上传</span>
             <span v-show="video.status=='error'">错误</span>
             <span v-show="video.status=='complete'">完成</span>
@@ -200,6 +202,10 @@ export default {
     }
   },
   methods: {
+    pause() {
+      this.ybup.stop();
+      this.is_paused = true;
+    },
     cropCover: function(videoFilePath, videoName) {
       var saveFolder = path.join(app.getPath("temp"), videoName);
       console.log(saveFolder);
