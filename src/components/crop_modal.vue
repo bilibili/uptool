@@ -55,28 +55,28 @@ export default {
         reader.onloadend = () => {
           this.cropper.replace(this.image_base64)
         };
+
+        this.initialize_cropper()
       }
     },
     save: function() {
       this.$store.commit('setCover', this.image_base64);
-      this.$emit("set-cover", this.image_base64);
       this.$emit("close-modal");
       if (this.cropper.getCroppedCanvas()) {
-        this.$emit(
-          "cropped-cover",
-          this.cropper.getCroppedCanvas().toDataURL()
+        this.$store.commit('setCroppedCover'
+          ,this.cropper.getCroppedCanvas().toDataURL()
         );
-        this.$emit("cropper-data", this.cropper.getData());
+        this.$store.commit('setCropperData', this.cropper.getData());
+        console.log(this.$store.state)
       } else {
-        this.$emit("cropped-cover", "");
-        this.$emit("cropper-data", null);
+        this.$store.commit('setCroppedCover', '');
+        this.$store.commit('setCropperData', null);
       }
     },
     reset: function() {
       this.image_base64 = "";
       document.getElementById("cover-input").value = "";
-      this.cropper.disable()
-      this.$emit("set-cover", this.image_base64);
+      this.cropper.destroy()
     },
     initialize_cropper: function() {
       var image = document.getElementById("cropper");
@@ -90,16 +90,31 @@ export default {
       this.cropper.replace(this.image_base64)
     }
   },
-  props: ["src", "cropper_data", "videos"],
+  props: ["videos"],
   data() {
     return {
-      image_base64: this.src,
-      image_cropped_base64: this.src,
       cropper: null
     };
   },
+  computed: {
+    image_base64: {
+      get() {
+        return this.$store.state.cover
+      },
+      set(data) {
+        this.$store.commit('setCover', data)
+      }
+    },
+    cropper_data: {
+      get() {
+        return this.$store.state.cropperData
+      },
+      set(data) {
+        this.$store.commit('setCropperData', data)
+      }
+    }
+  },
   mounted: function() {
-    this.image_base64 = this.src;
     var image = document.getElementById("cropper");
     this.cropper = new Cropper(image, {
       viewMode: 0,

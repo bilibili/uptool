@@ -23,12 +23,8 @@
 
     <crop-modal
       v-if="showModal"
-      @set-cover="image_base64=$event"
       :src="image_base64"
       @close-modal="showModal = false"
-      @cropped-cover="cropped_cover=$event"
-      @cropper-data="cropper_data=$event"
-      :cropper_data="cropper_data"
       :videos="videos"
     ></crop-modal>
 

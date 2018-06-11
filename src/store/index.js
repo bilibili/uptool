@@ -6,7 +6,8 @@ Vue.use(Vuex)
 const state = {
     preCroppedCovers: [],
     cover: null,
-    cropperData: null
+    cropperData: null,
+    croppedCover: null
 }
 
 const getters = {
@@ -20,6 +21,12 @@ const mutations = {
     setCover(state, cover) {
         // user has set the cover
         state.cover = cover
+    },
+    setCropperData(state, cropperData) {
+        state.cropperData = cropperData
+    },
+    setCroppedCover(state, cover) {
+        state.croppedCover = cover
     }
 }
 export default new Vuex.Store({
