@@ -9,6 +9,11 @@ export default new ElectronPreferences({
      * Where should preferences be saved?
      */
     'dataStore': path.resolve(app.getPath('userData'), 'preferences.json'),
+    'defaults': {
+        'general': {
+            'system': ['minimize']
+        }
+    },
     /**
      * The preferences window is divided into sections. Each section has a label, an icon, and one or
      * more fields associated with it. Each section should also be given a unique ID.
