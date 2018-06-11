@@ -1,5 +1,4 @@
-const electron = require('electron');
-const app = electron.app;
+const {app} = require('electron');
 const path = require('path');
 const os = require('os');
 const ElectronPreferences = require('electron-preferences');
@@ -12,6 +11,9 @@ export default new ElectronPreferences({
     'defaults': {
         'general': {
             'system': ['minimize']
+        },
+        'appearance': {
+            'controlStyle': (os.platform == 'darwin') ? 'mac' : 'win'
         }
     },
     /**
@@ -43,6 +45,27 @@ export default new ElectronPreferences({
                                 ]
                             }
                         ]
+                    }
+                ]
+            }
+        },
+        {
+            'id': 'appearance',
+            'label': '外观',
+            'icon': 'diamond',
+            'form': {
+                'groups': [
+                    {
+                        'label': '外观',
+                        'fields': [{
+                            'label': '窗口风格',
+                            'key': 'controlStyle',
+                            'type': 'radio',
+                            'options': [
+                                {'label': 'Windows 风格', value: 'win'},
+                                {'label': 'macOS 风格', value: 'mac'},
+                            ]
+                        }]
                     }
                 ]
             }

@@ -20,11 +20,9 @@ export default {
   },
   mounted() {
     win.on("focus", () => {
-      console.log("focus");
       this.isFocused = true;
     });
     win.on("blur", () => {
-      console.log("blur");
       this.isFocused = false;
     });
   },
