@@ -11,7 +11,7 @@
         <input id="cover-input" v-on:change="load" type='file'>
         <img id="cropper" :src="image_base64" style="max-width: 100%; max-height: calc(100vh - 500px);">
         <div class="level box" v-if="videos.length != 0">
-          <div v-if="preCroppedCovers.length==0">
+          <div class="level-item" v-if="preCroppedCovers.length==0">
             <!-- no precropped images, display a loading badage-->
             <font-awesome-icon icon="spinner" />
           </div> 
