@@ -595,10 +595,6 @@ export default {
       this.ybup.bind("Error", function(up, err) {
         var notif = new Notification(err.showText);
       });
-
-      this.ybup.bind("BeforeUpload", function(up, file) {
-        $("#" + file.id + ">.bili_filename").html(file.bili_filename);
-      });
       this.ybup.init();
     });
   }
