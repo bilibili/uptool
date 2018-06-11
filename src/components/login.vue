@@ -11,6 +11,7 @@
 </template>
 
 <script>
+var os = require('os')
 const { ipcRenderer, remote } = require("electron");
 let win = remote.getCurrentWindow();
 export default {
@@ -43,12 +44,18 @@ export default {
       this.isLoading = false
       // hack the css
       $("iframe").css;
-      $("iframe")
+      var closeButton = $("iframe")
         .contents()
-        .find("#close")
-        .css({
+        .find("#close");
+      if (os.platform == 'darwin') {
+        closeButton.css({
           visibility: "hidden"
         });
+      } else {
+        closeButton.css({
+          '-webkit-app-region': "no-drag"
+        });
+      }
       $("iframe")
         .contents()
         .find("#wrapper")
@@ -65,19 +72,25 @@ export default {
         });
       $("iframe")
         .contents()
-        .find("#geestcp")
+        .find("#login")
         .css({
           "-webkit-app-region": "no-drag"
         });
       $("iframe")
         .contents()
         .find("#qrcode")
+        .css({
+          "-webkit-app-region": "no-drag"
+        })
         .click(() => {
           resize();
         });
       $("iframe")
         .contents()
         .find("#tab-nav")
+        .css({
+          "-webkit-app-region": "no-drag"
+        })
         .click(() => {
           resize();
         });

@@ -164,6 +164,7 @@ function createLoginWindow() {
     width: 420,
     height: 400,
     titleBarStyle: 'hidden',
+    frame: false,
     useContentSize: true,
     webPreferences: {
       webSecurity: false
