@@ -1,5 +1,6 @@
 <template>
   <div id="submit">
+    <div class="blur-wrapper">
     <div id="control">
       <nav class="level">
         <div class="level-left">
@@ -144,6 +145,7 @@
 
       </div>
     </div>
+    </div>
   </div>
 </template>
 
@@ -186,12 +188,14 @@ export default {
       is_paused: false,
       is_uploading: false,
       showModal: false,
-      image_base64: "",
       cropped_cover: "",
       cropper_data: null
     };
   },
   computed: {
+    image_base64() {
+      return this.$store.state.cover
+    },
     halftypelist: function() {
       if (this.typelist) {
         var mid = Math.ceil(this.typelist.length / 2);
@@ -230,14 +234,6 @@ export default {
           })
           .on("end", () => {
             console.log("file has been converted succesfully");
-            // fs.readFile(
-            //   path.join(path.join(saveFolder, 'output.jpg')),
-            //   (err, data) => {
-            //     var img_str =
-            //       "data:image/jpg;base64," + Buffer(data).toString("base64");
-            //     this.$store.commit("addCover", img_str);
-            //   }
-            // );
             // loop the output folder
             fs.readdir(saveFolder, (err, files) => {
               if (err) {
@@ -678,5 +674,16 @@ export default {
 
 #content {
   padding: 20px;
+}
+
+#submit {
+  background-image: url(https://i.loli.net/2018/06/11/5b1df966a2b57.jpg);
+  background-color: transparent;
+  background-size: cover;
+}
+
+.blur-wrapper {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 </style>

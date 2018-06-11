@@ -58,6 +58,7 @@ export default {
       }
     },
     save: function() {
+      this.$store.commit('setCover', this.image_base64);
       this.$emit("set-cover", this.image_base64);
       this.$emit("close-modal");
       if (this.cropper.getCroppedCanvas()) {
@@ -74,6 +75,7 @@ export default {
     reset: function() {
       this.image_base64 = "";
       document.getElementById("cover-input").value = "";
+      this.cropper.disable()
       this.$emit("set-cover", this.image_base64);
     },
     initialize_cropper: function() {

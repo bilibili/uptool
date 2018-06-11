@@ -3,8 +3,8 @@
         <!-- Left side -->
         <div class="level-left">
             <p class="level-item">
-                这里是 logo
             </p>
+            <img src="https://cdn.onlinewebfonts.com/svg/img_415695.png" class="level-item logo" />
             <!-- separator -->
             <p class="level-item"> | </p>
             <p class="level-item">
@@ -93,6 +93,10 @@ export default {
 </script>
 
 <style scoped>
+.logo {
+    height: 30px;
+}
+
 .avatar {
   border-radius: 12px;
 }
