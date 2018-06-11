@@ -655,9 +655,8 @@ export default {
   top: 0;
   margin-top: 0;
   z-index: 5;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: transparent;
   backdrop-filter: blur(5px);
-  box-shadow: 0 0px 0px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
   padding: 20px;
 }
 
