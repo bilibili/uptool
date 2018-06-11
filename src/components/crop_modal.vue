@@ -9,12 +9,12 @@
       <section class="modal-card-body">
         <!-- Content ... -->
         <input id="cover-input" v-on:change="load" type='file'>
-        <img id="cropper" :src="image_base64" style="max-width: 100%; max-height: calc(100vh - 500px);">
-        <div class="level box" v-if="videos.length != 0">
+        <img id="cropper" :src="image_base64">
+        <div class="level box" v-if="videos && videos.length != 0">
           <div class="level-item" v-if="preCroppedCovers.length==0">
             <!-- no precropped images, display a loading badage-->
             <font-awesome-icon icon="spinner" />
-          </div> 
+          </div>
           <div v-for="img in preCroppedCovers" class="level-item">
             <img :src="img" class="image is-64x64" @click="setImage(img)" />
           </div>
@@ -30,15 +30,10 @@
 <script>
 import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
-import { resolve } from 'path';
+import { resolve } from "path";
 
 export default {
   name: "crop-modal",
-  computed: {
-    preCroppedCovers() {
-      return this.$store.state.preCroppedCovers;
-    }
-  },
   methods: {
     load: function(ev) {
       const files = ev.target.files;
@@ -53,30 +48,31 @@ export default {
         reader.readAsDataURL(files[0]);
 
         reader.onloadend = () => {
-          this.cropper.replace(this.image_base64)
+          this.cropper.replace(this.image_base64);
         };
 
-        this.initialize_cropper()
+        this.initialize_cropper();
       }
     },
     save: function() {
-      this.$store.commit('setCover', this.image_base64);
+      this.$store.commit("setCover", this.image_base64);
       this.$emit("close-modal");
       if (this.cropper.getCroppedCanvas()) {
-        this.$store.commit('setCroppedCover'
-          ,this.cropper.getCroppedCanvas().toDataURL()
+        this.$store.commit(
+          "setCroppedCover",
+          this.cropper.getCroppedCanvas().toDataURL()
         );
-        this.$store.commit('setCropperData', this.cropper.getData());
-        console.log(this.$store.state)
+        this.$store.commit("setCropperData", this.cropper.getData());
+        console.log(this.$store.state);
       } else {
-        this.$store.commit('setCroppedCover', '');
-        this.$store.commit('setCropperData', null);
+        this.$store.commit("setCroppedCover", "");
+        this.$store.commit("setCropperData", null);
       }
     },
     reset: function() {
       this.image_base64 = "";
       document.getElementById("cover-input").value = "";
-      this.cropper.destroy()
+      this.cropper.destroy();
     },
     initialize_cropper: function() {
       var image = document.getElementById("cropper");
@@ -86,8 +82,8 @@ export default {
       });
     },
     setImage(img) {
-      this.image_base64 = img
-      this.cropper.replace(this.image_base64)
+      this.image_base64 = img;
+      this.cropper.replace(this.image_base64);
     }
   },
   props: ["videos"],
@@ -99,19 +95,22 @@ export default {
   computed: {
     image_base64: {
       get() {
-        return this.$store.state.cover
+        return this.$store.state.cover;
       },
       set(data) {
-        this.$store.commit('setCover', data)
+        this.$store.commit("setCover", data);
       }
     },
     cropper_data: {
       get() {
-        return this.$store.state.cropperData
+        return this.$store.state.cropperData;
       },
       set(data) {
-        this.$store.commit('setCropperData', data)
+        this.$store.commit("setCropperData", data);
       }
+    },
+    preCroppedCovers() {
+      return this.$store.state.preCroppedCovers;
     }
   },
   mounted: function() {
@@ -124,3 +123,10 @@ export default {
   }
 };
 </script>
+
+<style>
+#cropper {
+  max-width: 100%;
+  max-height: calc(100vh - 600px);
+}
+</style>
