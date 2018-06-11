@@ -153,7 +153,10 @@ var fs = require("fs");
 var path = require("path");
 var ffmpeg_static = require("ffmpeg-static");
 var ffmpeg = require("fluent-ffmpeg");
-ffmpeg.setFfmpegPath(ffmpeg_static.path);
+// have to be replaced because of processes cannot be spawned inside asar bundle
+// if in dev mode, nothing will be replaced
+// see https://electronjs.org/docs/tutorial/application-packaging#executing-binaries-inside-asar-archive
+ffmpeg.setFfmpegPath(ffmpeg_static.path.replace('app.asar', 'app.asar.unpacked'));
 const { ipcRenderer, remote } = require("electron");
 const app = remote.app;
 
