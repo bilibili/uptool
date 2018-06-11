@@ -1,9 +1,9 @@
 <template>
     <div :class="{focus: isFocused}">
         <div class="traffic-lights">
-            <button class="traffic-light traffic-light-close" id="close"></button>
-            <button class="traffic-light traffic-light-minimize" id="minimize"></button>
-            <button class="traffic-light traffic-light-maximize" id="maximize"></button>
+            <button class="traffic-light traffic-light-close" id="close" @click="close"></button>
+            <button class="traffic-light traffic-light-minimize" id="minimize" @click="minimize"></button>
+            <button class="traffic-light traffic-light-maximize" id="maximize" @click="maximize"></button>
         </div>
     </div>
 </template>
@@ -27,6 +27,17 @@ export default {
       console.log("blur");
       this.isFocused = false;
     });
+  },
+  methods: {
+      minimize() {
+          win.minimize()
+      },
+      maximize() {
+          win.maximize()
+      },
+      close() {
+          win.close()
+      }
   }
 };
 </script>
