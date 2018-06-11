@@ -643,6 +643,10 @@ export default {
   color: white;
 }
 
+.submit-button:focus {
+  color: white;
+}
+
 .dropdown-button {
   width: 8vw;
 }
