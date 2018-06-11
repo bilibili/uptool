@@ -23,7 +23,6 @@
 
     <crop-modal
       v-if="showModal"
-      :src="image_base64"
       @close-modal="showModal = false"
       :videos="videos"
     ></crop-modal>
