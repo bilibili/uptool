@@ -49,6 +49,7 @@
 
 <script>
 var path = require("path");
+var os = require("os");
 import { format as formatUrl } from "url";
 import traffic_light from "./traffic_light.vue";
 import win_controls from "./win_controls";
@@ -66,10 +67,14 @@ export default {
     isMacControls() {
       var preferences = ipcRenderer.sendSync("getPreferences");
       var appearancePref = preferences.appearance;
-      if (appearancePref && appearancePref.controlStyle == "mac") {
-        return true
+      if (appearancePref == undefined) {
+        return os.platform == "darwin" ? true : false;
       } else {
-        return false
+        if (appearancePref && appearancePref.controlStyle == "mac") {
+          return true;
+        } else {
+          return false;
+        }
       }
     }
   },
