@@ -48,7 +48,7 @@
             </div>
         </div>
         <div class="level">
-        <span class="level-item" v-if="success">成功!</span>
+            <span class="level-item">{{message}}</span>
         </div>
     </div>
 </template>
@@ -76,15 +76,18 @@ export default {
     transcode() {
       ffmpeg(this.fromFilePath)
         .on("start", () => {
-            this.isStartButtonDisabled = true
-            this.success = false
+          this.isStartButtonDisabled = true;
+          this.message = "";
         })
-        .on("progress", (progress) => {
-          this.progress=progress.percent;
+        .on("progress", progress => {
+          this.progress = progress.percent;
         })
-        .on('end', () => {
-            this.success = true
-            this.isStartButtonDisabled = false
+        .on("error", function(err, stdout, stderr) {
+          this.message = err.message;
+        })
+        .on("end", () => {
+          this.message = "成功！";
+          this.isStartButtonDisabled = false;
         })
         .output(path.join(this.toFolder, "output.mp4"))
         .run();
@@ -97,7 +100,7 @@ export default {
       fromFileName: null,
       progress: 0,
       isStartButtonDisabled: false,
-      success: false
+      message: ""
     };
   }
 };
