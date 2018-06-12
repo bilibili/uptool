@@ -13,7 +13,7 @@
                 </a>
             </li>
             <li>
-                <router-link to="/placeholder" active-class="active-link">
+                <router-link to="/transcode" active-class="active-link">
                     <font-awesome-icon icon="exchange-alt" />
                     转码
                 </router-link>
