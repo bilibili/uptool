@@ -137,6 +137,9 @@ ipcMain.on('win_hide', (event, arg) => {
   close()
 });
 
+ipcMain.on('getStaticPath', (event, arg) =>{
+  event.returnValue = __static
+})
 
 function logOut() {
   session.defaultSession.clearStorageData(() => {

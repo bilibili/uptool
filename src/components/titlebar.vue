@@ -59,10 +59,11 @@ export default {
   computed: {
     logoSrc() {
       return formatUrl({
-        pathname: path.join(__static, "logo.svg"),
+        pathname: path.join(this.staticPath, "logo.svg"),
         protocol: "file",
         slashes: true
       });
+      // return path.join(this.staticPath, "logo.svg");
     },
     isMacControls() {
       var preferences = ipcRenderer.sendSync("getPreferences");
@@ -82,7 +83,8 @@ export default {
     return {
       preData: {},
       myInfo: {},
-      isDropdownShown: false
+      isDropdownShown: false,
+      staticPath: ''
     };
   },
   created: function() {
@@ -95,6 +97,7 @@ export default {
         }
       }
     );
+    this.staticPath = ipcRenderer.sendSync('getStaticPath');
   },
   methods: {
     logOut: function() {
