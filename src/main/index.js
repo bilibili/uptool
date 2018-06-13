@@ -26,6 +26,8 @@ function createMainWindow() {
     },
     width: 1024,
     height: 768,
+    minWidth: 800,
+    minHeight: 600,
     frame: false
   })
 
@@ -166,6 +168,7 @@ function createLoginWindow() {
   const window = new BrowserWindow({
     width: 420,
     height: 400,
+    resizable: false,
     titleBarStyle: 'hidden',
     frame: false,
     useContentSize: true,
