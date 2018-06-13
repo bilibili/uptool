@@ -97,6 +97,7 @@ export default {
         }
       }
     );
+    // have to use ipc to get the static path, otherwise __static will be evaluated at compile-time
     this.staticPath = ipcRenderer.sendSync('getStaticPath');
   },
   methods: {
